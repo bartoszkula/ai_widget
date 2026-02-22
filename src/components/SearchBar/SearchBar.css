@@ -1,0 +1,631 @@
+/* Wrapper holds search bar + separate view toggle */
+.search-bar-wrapper {
+  position: absolute;
+  top: 42px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.search-bar {
+  flex-shrink: 0;
+}
+
+.search-bar-inner {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 48px;
+  padding: 6px 6px 6px 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08);
+  gap: 4px;
+}
+
+/* Hotel search text box */
+.hotel-search-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  flex-shrink: 0;
+}
+
+.hotel-search-icon {
+  flex-shrink: 0;
+}
+
+.hotel-search-input {
+  border: none;
+  outline: none;
+  font-size: 13px;
+  font-family: inherit;
+  color: #333;
+  width: 110px;
+  background: transparent;
+}
+
+.hotel-search-input::placeholder {
+  color: #aaa;
+  font-weight: 400;
+}
+
+/* View toggle (Map / List / Both) — separate pill */
+.view-toggle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: white;
+  border-radius: 24px;
+  padding: 4px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.view-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border: none;
+  border-radius: 18px;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 500;
+  color: #777;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.view-toggle-btn:hover {
+  color: #333;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.view-toggle-active {
+  background: #F5C518;
+  color: #1a1a1a;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.view-toggle-active:hover {
+  background: #e6b600;
+}
+
+.view-toggle-btn svg {
+  flex-shrink: 0;
+}
+
+/* Dates & Guests */
+.search-dates,
+.search-guests {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+  position: relative;
+}
+
+.search-dates:hover,
+.search-guests:hover {
+  background: #f5f5f5;
+}
+
+.search-dates {
+  border-left: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.dates-text,
+.guests-text {
+  font-size: 13px;
+  color: #555;
+  font-weight: 400;
+}
+
+.dates-clickable,
+.guests-clickable {
+  cursor: pointer;
+}
+
+.dates-clickable:hover,
+.guests-clickable:hover {
+  color: #1a1a1a;
+}
+
+.calendar-icon,
+.guests-icon {
+  flex-shrink: 0;
+}
+
+.search-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #F5C518;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 24px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: inherit;
+}
+
+.search-button:hover {
+  background: #e6b600;
+}
+
+.search-button:active {
+  transform: scale(0.97);
+}
+
+.search-button svg {
+  flex-shrink: 0;
+}
+
+.search-button svg circle,
+.search-button svg line {
+  stroke: #1a1a1a;
+}
+
+.search-button-text {
+  display: inline;
+}
+
+/* Date picker popup */
+.datepicker-popup {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 8px;
+  z-index: 2000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.datepicker-popup .react-datepicker {
+  border: none;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+}
+
+.datepicker-popup .react-datepicker__header {
+  background: white;
+  border-bottom: 1px solid #eee;
+  padding-top: 12px;
+}
+
+.datepicker-popup .react-datepicker__current-month {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.datepicker-popup .react-datepicker__day-name {
+  color: #999;
+  font-weight: 500;
+  font-size: 11px;
+  width: 36px;
+  line-height: 36px;
+}
+
+.datepicker-popup .react-datepicker__day {
+  width: 36px;
+  line-height: 36px;
+  border-radius: 50%;
+  font-size: 13px;
+  color: #333;
+  transition: all 0.1s ease;
+}
+
+.datepicker-popup .react-datepicker__day:hover {
+  background: #f0f0f0;
+  border-radius: 50%;
+}
+
+.datepicker-popup .react-datepicker__day--selected,
+.datepicker-popup .react-datepicker__day--range-start,
+.datepicker-popup .react-datepicker__day--range-end {
+  background: #F5C518 !important;
+  color: #1a1a1a !important;
+  font-weight: 600;
+  border-radius: 50%;
+}
+
+.datepicker-popup .react-datepicker__day--in-range {
+  background: #fef3c7 !important;
+  color: #1a1a1a !important;
+  border-radius: 0;
+}
+
+.datepicker-popup .react-datepicker__day--in-selecting-range {
+  background: #fef3c7 !important;
+  color: #1a1a1a !important;
+}
+
+.datepicker-popup .react-datepicker__day--keyboard-selected {
+  background: #fef3c7;
+  color: #1a1a1a;
+}
+
+.datepicker-popup .react-datepicker__navigation {
+  top: 14px;
+}
+
+.datepicker-popup .react-datepicker__navigation-icon::before {
+  border-color: #333;
+}
+
+.datepicker-popup .react-datepicker__day--disabled {
+  color: #ccc !important;
+}
+
+/* ===== PAX Picker Popup ===== */
+.pax-popup {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 8px;
+  z-index: 2000;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 12px;
+  min-width: 230px;
+}
+
+.pax-rooms {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.pax-room {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.pax-room-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.pax-room-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.pax-room-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.pax-room-remove:hover {
+  background: #f0f0f0;
+}
+
+.pax-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 0;
+}
+
+.pax-label {
+  font-size: 12px;
+  color: #555;
+  font-weight: 400;
+}
+
+.pax-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pax-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background: white;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  line-height: 1;
+}
+
+.pax-btn:hover:not(:disabled) {
+  border-color: #F5C518;
+  background: #fef9e7;
+}
+
+.pax-btn:disabled {
+  color: #ccc;
+  border-color: #eee;
+  cursor: not-allowed;
+}
+
+.pax-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a1a;
+  min-width: 16px;
+  text-align: center;
+}
+
+.pax-child-ages {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px 0 2px 0;
+  margin-top: 2px;
+  border-top: 1px dashed #eee;
+}
+
+.pax-child-age-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.pax-child-age-label {
+  font-size: 11px;
+  color: #888;
+  font-weight: 400;
+}
+
+.pax-child-age-select {
+  padding: 3px 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #333;
+  background: #fff;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.pax-child-age-select:focus {
+  border-color: #F5C518;
+}
+
+.pax-add-room {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px dashed #ddd;
+  border-radius: 8px;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 500;
+  color: #777;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.pax-add-room:hover {
+  border-color: #F5C518;
+  color: #1a1a1a;
+  background: #fef9e7;
+}
+
+/* Group booking banner */
+.pax-group-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 8px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.pax-group-text {
+  font-size: 11px;
+  color: #777;
+  font-weight: 400;
+  text-align: center;
+}
+
+.pax-group-btn {
+  width: 100%;
+  padding: 8px 16px;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease;
+}
+
+.pax-group-btn:hover {
+  background: #333;
+}
+
+/* ===== TABLET (481px - 768px) ===== */
+@media (max-width: 768px) {
+  .search-bar {
+    top: 30px;
+  }
+
+  .search-bar-inner {
+    padding: 4px 4px 4px 6px;
+    gap: 2px;
+  }
+
+  .hotel-search-input {
+    width: 80px;
+    font-size: 12px;
+  }
+
+  .view-toggle-btn {
+    padding: 4px 8px;
+    font-size: 11px;
+    gap: 3px;
+  }
+
+  .view-toggle-btn svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .search-dates,
+  .search-guests {
+    padding: 6px 8px;
+    gap: 4px;
+  }
+
+  .dates-text,
+  .guests-text {
+    font-size: 12px;
+  }
+
+  .search-button {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+
+  .search-guests {
+    display: none;
+  }
+
+  .datepicker-popup .react-datepicker {
+    font-size: 12px;
+  }
+
+  .datepicker-popup .react-datepicker__day,
+  .datepicker-popup .react-datepicker__day-name {
+    width: 32px;
+    line-height: 32px;
+  }
+}
+
+/* ===== MOBILE (≤ 480px) ===== */
+@media (max-width: 480px) {
+  .search-bar {
+    top: 22px;
+    left: 8px;
+    right: 8px;
+    transform: none;
+    width: auto;
+  }
+
+  .search-bar-inner {
+    border-radius: 16px;
+    padding: 6px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .hotel-search-box {
+    padding: 4px 8px;
+  }
+
+  .hotel-search-input {
+    width: 70px;
+    font-size: 11px;
+  }
+
+  .view-toggle {
+    padding: 2px;
+  }
+
+  .view-toggle-btn {
+    padding: 3px 6px;
+    font-size: 10px;
+    gap: 2px;
+  }
+
+  .view-toggle-btn svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .search-dates {
+    border-left: none;
+    border-right: none;
+    padding: 4px 8px;
+  }
+
+  .search-guests {
+    display: none;
+  }
+
+  .search-button {
+    padding: 6px 10px;
+    font-size: 11px;
+    border-radius: 12px;
+  }
+
+  .search-button-text {
+    display: none;
+  }
+
+  .datepicker-popup {
+    left: 0;
+    transform: none;
+    right: 0;
+  }
+
+  .datepicker-popup .react-datepicker {
+    font-size: 11px;
+  }
+
+  .datepicker-popup .react-datepicker__month-container + .react-datepicker__month-container {
+    display: none;
+  }
+
+  .datepicker-popup .react-datepicker__day,
+  .datepicker-popup .react-datepicker__day-name {
+    width: 28px;
+    line-height: 28px;
+  }
+}

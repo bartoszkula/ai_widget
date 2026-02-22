@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 50" fill="none">
+  <!-- Black circle background -->
+  <circle cx="25" cy="25" r="23" fill="#1A1A1A"/>
+  <!-- White bed icon inside circle -->
+  <g fill="white">
+    <!-- Headboard (vertical bar on left) -->
+    <rect x="13" y="14" width="3.5" height="16" rx="1.75"/>
+    <!-- Bed body / mattress shape -->
+    <path d="M17.5 22 C17.5 18, 21 15, 25 15 L33 15 C37 15, 38.5 18, 38.5 22 L38.5 27 L17.5 27 Z"/>
+    <!-- Bed base/frame -->
+    <rect x="16" y="27" width="24" height="3" rx="1.5"/>
+    <!-- Front leg -->
+    <rect x="36" y="30" width="3" height="4" rx="1"/>
+    <!-- Pillow bump -->
+    <ellipse cx="23" cy="19.5" rx="4" ry="3" fill="rgba(255,255,255,0.7)"/>
+  </g>
+  <!-- "eventbeds" text -->
+  <text x="56" y="33" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="28" font-weight="800" fill="#1A1A1A" letter-spacing="-0.3">
+    eventbeds</text>
+  <!-- TM symbol -->
+  <text x="248" y="20" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#1A1A1A">
+    ™</text>
+</svg>

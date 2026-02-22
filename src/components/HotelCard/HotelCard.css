@@ -1,0 +1,270 @@
+.hotel-card {
+  flex-shrink: 0;
+  width: 176px;
+  background: #1a1a1a;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.hotel-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+}
+
+.hotel-card-active {
+  outline: 2px solid #F5C518;
+  outline-offset: -2px;
+}
+
+.hotel-card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 112px;
+  overflow: hidden;
+}
+
+.hotel-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hotel-card-price-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #F5C518;
+  color: #1a1a1a;
+  font-weight: 700;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  letter-spacing: -0.2px;
+}
+
+.hotel-card-promotion {
+  position: absolute;
+  bottom: 6px;
+  left: 8px;
+  background: #F5C518;
+  color: #1a1a1a;
+  font-weight: 600;
+  font-size: 8px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+.hotel-card-info {
+  padding: 8px 10px 10px;
+}
+
+.hotel-card-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hotel-card-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.star-rating {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.star {
+  display: block;
+  width: 10px;
+  height: 10px;
+}
+
+.hotel-card-rating-score {
+  font-size: 10px;
+  font-weight: 600;
+  color: #F5C518;
+  margin-left: auto;
+}
+
+.hotel-card-reviews {
+  font-size: 10px;
+  color: #999;
+  font-weight: 400;
+}
+
+/* Viewing now urgency badge */
+.hotel-card-viewing {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 500;
+  color: #ff6b6b;
+  margin-top: 3px;
+}
+
+.hotel-card-viewing-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ff6b6b;
+  flex-shrink: 0;
+  animation: viewingPulse 2s ease-in-out infinite;
+}
+
+.hotel-card-viewing-hidden {
+  visibility: hidden;
+}
+
+@keyframes viewingPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Compare button */
+.hotel-card-compare-btn {
+  margin-top: 5px;
+  width: 100%;
+  background: transparent;
+  border: 1.5px solid #444;
+  border-radius: 5px;
+  padding: 5.5px 0;
+  font-size: 9px;
+  font-weight: 600;
+  color: #ccc;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.hotel-card-compare-btn:hover {
+  border-color: #F5C518;
+  color: #F5C518;
+}
+
+.hotel-card-compare-active {
+  background: #F5C518;
+  border-color: #F5C518;
+  color: #1a1a1a;
+}
+
+.hotel-card-compare-active:hover {
+  background: #e6b600;
+  border-color: #e6b600;
+  color: #1a1a1a;
+}
+
+.hotel-card-compare-blink {
+  animation: compareButtonBlink 0.5s ease 3;
+}
+
+@keyframes compareButtonBlink {
+  0%, 100% { border-color: #444; box-shadow: none; }
+  50% { border-color: #F5C518; box-shadow: 0 0 8px rgba(245, 197, 24, 0.5); color: #F5C518; }
+}
+
+/* ===== TABLET (481px - 768px) ===== */
+@media (max-width: 768px) {
+  .hotel-card {
+    width: 160px;
+  }
+
+  .hotel-card-image-wrapper {
+    height: 96px;
+  }
+
+  .hotel-card-info {
+    padding: 6px 8px 8px;
+  }
+
+  .hotel-card-name {
+    font-size: 10px;
+  }
+
+  .hotel-card-price-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .hotel-card-promotion {
+    font-size: 7px;
+    padding: 2px 5px;
+    bottom: 5px;
+    left: 6px;
+  }
+}
+
+/* ===== MOBILE (≤ 480px) ===== */
+@media (max-width: 480px) {
+  .hotel-card {
+    width: 136px;
+    border-radius: 8px;
+  }
+
+  .hotel-card-image-wrapper {
+    height: 84px;
+  }
+
+  .hotel-card-info {
+    padding: 5px 6px 7px;
+  }
+
+  .hotel-card-name {
+    font-size: 9.5px;
+    margin-bottom: 3px;
+  }
+
+  .hotel-card-price-badge {
+    font-size: 9px;
+    padding: 2px 5px;
+    top: 6px;
+    left: 6px;
+    border-radius: 4px;
+  }
+
+  .hotel-card-rating-row {
+    gap: 2px;
+  }
+
+  .star-rating {
+    gap: 0;
+  }
+
+  .star {
+    width: 9px;
+    height: 9px;
+  }
+
+  .hotel-card-rating-score {
+    font-size: 9px;
+  }
+
+  .hotel-card-reviews {
+    font-size: 9px;
+  }
+
+  .hotel-card-promotion {
+    font-size: 6.5px;
+    padding: 2px 4px;
+    bottom: 4px;
+    left: 6px;
+    border-radius: 3px;
+  }
+}
