@@ -327,6 +327,89 @@
   color: #1a1a1a;
 }
 
+.cmp-ai-chip-custom {
+  background: #F5C518 !important;
+  border-color: #F5C518 !important;
+  color: #1a1a1a !important;
+  font-weight: 600 !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 8px !important;
+}
+
+.cmp-ai-chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.2);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.cmp-ai-chip-remove:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.cmp-ai-input-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
+}
+
+.cmp-ai-input {
+  flex: 1;
+  background: #1e1e1e;
+  border: 1.5px solid #3a3a3a;
+  border-radius: 18px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.cmp-ai-input::placeholder {
+  color: #666;
+}
+
+.cmp-ai-input:focus {
+  border-color: #F5C518;
+}
+
+.cmp-ai-send-btn {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: #F5C518;
+  color: #1a1a1a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.cmp-ai-send-btn:hover {
+  transform: scale(1.06);
+}
+
+.cmp-ai-send-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* ─── SCROLLABLE BODY ─── */
 .cmp-body {
   flex: 1;
@@ -413,6 +496,18 @@
   background-size: cover;
   background-position: center;
   flex-shrink: 0;
+}
+
+.cmp-col-hero-clickable {
+  cursor: pointer;
+}
+
+.cmp-col-hero-clickable .cmp-col-name {
+  transition: color 0.15s ease;
+}
+
+.cmp-col-hero-clickable:hover .cmp-col-name {
+  color: #F5C518;
 }
 
 .cmp-col-hero-overlay {
@@ -971,6 +1066,29 @@
   font-size: 22px;
   font-weight: 700;
   color: #F5C518;
+}
+
+.cmp-col-select-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px 16px;
+  background: transparent;
+  border: 1.5px solid #F5C518;
+  border-radius: 10px;
+  color: #F5C518;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cmp-col-select-btn:hover {
+  background: #F5C518;
+  color: #1a1a1a;
 }
 
 /* ─── COST BREAKDOWN SUMMARY ─── */

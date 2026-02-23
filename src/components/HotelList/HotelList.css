@@ -383,7 +383,6 @@
   padding: 24px 4px 24px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
   pointer-events: all;
 }
 
@@ -417,6 +416,7 @@
   transition: opacity 0.5s ease, max-height 0.5s ease, margin 0.5s ease, transform 0.5s ease;
   opacity: 1;
   max-height: 500px;
+  margin-bottom: 8px;
   transform: scale(1);
   overflow: visible;
 }
@@ -731,7 +731,6 @@
 
   .hotel-list-scroll {
     padding: 8px 10px 20px;
-    gap: 8px;
   }
 
   .hotel-list-item-image-wrapper {

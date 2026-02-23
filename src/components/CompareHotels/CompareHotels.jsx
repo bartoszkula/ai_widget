@@ -50,7 +50,7 @@ const AI_COLLAPSED_PHRASES = [
   "Unsure where to begin?",
 ]
 
-const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplaceAllHotels, initialQuantity = 1, initialAdultsPerRoom = 1, defaultCheckIn = '2027-09-07', defaultCheckOut = '2027-09-10' }) => {
+const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplaceAllHotels, onViewHotelDetail, initialQuantity = 1, initialAdultsPerRoom = 1, defaultCheckIn = '2027-09-07', defaultCheckOut = '2027-09-10' }) => {
   const [showSummary, setShowSummary] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [aiCollapsed, setAiCollapsed] = useState(false)
@@ -68,7 +68,11 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
   const [bookingForm, setBookingForm] = useState({ firstName: '', lastName: '', email: '', company: '', vat: '', cardNumber: '', expiry: '', cvv: '' })
   const [showBackToTop, setShowBackToTop] = useState(false)
   const [pageLoading, setPageLoading] = useState(true)
+  const [specialReqMode, setSpecialReqMode] = useState(false)
+  const [specialReqInput, setSpecialReqInput] = useState('')
+  const [specialReqChips, setSpecialReqChips] = useState([])
   const bodyRef = useRef(null)
+  const tierMapRef = useRef({})
   const showToast = useToast()
 
   // Build detail objects with distance, sorted cheapest to most expensive
@@ -86,6 +90,17 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
         }),
     [hotels],
   )
+
+  // Assign tier labels once when hotels first appear, persist across removals
+  useEffect(() => {
+    const tierLabels = ['Budget option', 'Mid-range option', 'Premium option']
+    const tierStyles = [0, 1, 2]
+    details.forEach((d, i) => {
+      if (!(d.id in tierMapRef.current)) {
+        tierMapRef.current[d.id] = { label: tierLabels[i] || tierLabels[tierLabels.length - 1], style: tierStyles[i] !== undefined ? tierStyles[i] : tierStyles[tierStyles.length - 1] }
+      }
+    })
+  }, [details])
 
   // Room configurations per hotel: { [hotelId]: [config, ...] }
   const [configs, setConfigs] = useState(() => {
@@ -318,6 +333,12 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
     }, 400)
   }
 
+  const handleSelectHotel = useCallback((hotelId) => {
+    if (!onRemoveHotel) return
+    const othersToRemove = hotels.filter((h) => h.id !== hotelId).map((h) => h.id)
+    othersToRemove.forEach((id) => onRemoveHotel(id))
+  }, [hotels, onRemoveHotel])
+
   // "Change one hotel" — ask user to click on a hotel to replace
   const handleChangeOneHotel = useCallback(() => {
     setAwaitingReplaceClick(true)
@@ -376,6 +397,7 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
   // Helper: replace all compared hotels with new set + reset configs + flash all
   const replaceAll = useCallback((newHotels) => {
     if (!onReplaceAllHotels) return
+    tierMapRef.current = {}
     onReplaceAllHotels(newHotels)
     const newConfigs = {}
     newHotels.forEach((h) => {
@@ -510,6 +532,50 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
     const currentMinStars = Math.min(...hotels.map((h) => h.stars))
     return allHotelsData.filter((h) => !currentIds.has(h.id) && h.stars > currentMinStars).length >= 3
   }, [hotels])
+
+  // "Special requirements" — search hotels by amenities/name/description
+  const handleSpecialReqSubmit = useCallback(() => {
+    const query = specialReqInput.trim().toLowerCase()
+    if (!query) return
+    // Add as chip
+    if (!specialReqChips.includes(specialReqInput.trim())) {
+      setSpecialReqChips((prev) => [...prev, specialReqInput.trim()])
+    }
+    // Search all hotels for matching amenities or name
+    const currentIds = new Set(hotels.map((h) => h.id))
+    const matches = allHotelsData
+      .filter((h) => {
+        const d = getHotelDetail(h)
+        const amenitiesStr = (d.amenities || []).join(' ').toLowerCase()
+        const nameStr = (d.name || '').toLowerCase()
+        const roomsStr = (d.rooms || []).map((r) => `${r.type} ${r.description || ''}`).join(' ').toLowerCase()
+        return amenitiesStr.includes(query) || nameStr.includes(query) || roomsStr.includes(query)
+      })
+      .sort((a, b) => a.price - b.price)
+      .slice(0, 3)
+    if (matches.length >= 1) {
+      // If we found matching hotels, replace with them (pad to 3 if needed)
+      const padded = [...matches]
+      if (padded.length < 3) {
+        const usedIds = new Set(padded.map((h) => h.id))
+        const extras = allHotelsData
+          .filter((h) => !usedIds.has(h.id))
+          .sort((a, b) => a.price - b.price)
+          .slice(0, 3 - padded.length)
+        padded.push(...extras)
+      }
+      replaceAll(padded)
+      setAiMessage(`Found hotels matching "${specialReqInput.trim()}". Here are the best options!`)
+    } else {
+      setAiMessage(`Sorry, I couldn't find hotels matching "${specialReqInput.trim()}". Try a different requirement.`)
+    }
+    setSpecialReqInput('')
+    setSpecialReqMode(false)
+  }, [specialReqInput, specialReqChips, hotels, replaceAll])
+
+  const removeSpecialReqChip = useCallback((chip) => {
+    setSpecialReqChips((prev) => prev.filter((c) => c !== chip))
+  }, [])
 
   const fmtDate = (d) => new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
 
@@ -792,7 +858,7 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
             </div>
             <div className="cmp-ai-content">
               <p className="cmp-ai-message">{aiMessage || "OK! Here's my recommendation. Compare prices, remove hotels that you don't like, add other rooms. Please note that I suggested the cheapest options for each hotel, but you can change it if you'd like!"}</p>
-              {!awaitingReplaceClick && (
+              {!awaitingReplaceClick && !specialReqMode && (
                 <div className="cmp-ai-chips">
                   <button className="cmp-ai-chip" onClick={handleChangeOneHotel}>Change one hotel</button>
                   {hasLessExpensive && <button className="cmp-ai-chip" onClick={handleFindLessExpensive}>Find less expensive</button>}
@@ -801,6 +867,36 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
                   <button className="cmp-ai-chip" onClick={handleDecreaseDistance}>Decrease distance</button>
                   {hasHigherRating && <button className="cmp-ai-chip" onClick={handleHigherRating}>Higher rating</button>}
                   <button className="cmp-ai-chip" onClick={handleAddBreakfast}>Add breakfast</button>
+                  <button className="cmp-ai-chip" onClick={() => { setSpecialReqMode(true); setAiMessage('What special requirements do you have? (e.g. Pool, Gym, Spa, Pet Friendly, Parking...)') }}>Special requirements</button>
+                </div>
+              )}
+              {specialReqMode && (
+                <div className="cmp-ai-chips">
+                  <div className="cmp-ai-input-row">
+                    <input
+                      className="cmp-ai-input"
+                      type="text"
+                      value={specialReqInput}
+                      onChange={(e) => setSpecialReqInput(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') handleSpecialReqSubmit(); if (e.key === 'Escape') { setSpecialReqMode(false); setAiMessage(null) } }}
+                      placeholder="e.g. Pool, Gym, Pet Friendly..."
+                      autoFocus
+                    />
+                    <button className="cmp-ai-send-btn" onClick={handleSpecialReqSubmit} disabled={!specialReqInput.trim()}>
+                      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M10 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </button>
+                  </div>
+                  <button className="cmp-ai-chip" onClick={() => { setSpecialReqMode(false); setSpecialReqInput(''); setAiMessage(null) }}>Cancel</button>
+                </div>
+              )}
+              {specialReqChips.length > 0 && (
+                <div className="cmp-ai-chips">
+                  {specialReqChips.map((chip) => (
+                    <button key={chip} className="cmp-ai-chip cmp-ai-chip-custom">
+                      {chip}
+                      <span className="cmp-ai-chip-remove" onClick={(e) => { e.stopPropagation(); removeSpecialReqChip(chip) }}>×</span>
+                    </button>
+                  ))}
                 </div>
               )}
               {awaitingReplaceClick && (
@@ -817,19 +913,21 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
           {details.map((detail, colIndex) => {
             const hotelCfgs = configs[detail.id] || []
             const ht = hotelTotals.find((t) => t.hotelId === detail.id)
-            const tierLabels = ['Budget option', 'Mid-range option', 'Premium option']
-            const tierLabel = tierLabels[colIndex] || tierLabels[tierLabels.length - 1]
+            const tier = tierMapRef.current[detail.id] || { label: 'Premium option', style: 2 }
             return (
               <div className={`cmp-col ${flashHotelIds.has(detail.id) ? 'cmp-col-flash' : ''} ${removingHotelId === detail.id ? 'cmp-col-removing' : ''} ${awaitingReplaceClick ? 'cmp-col-replace-target' : ''}`} key={detail.id} onClick={awaitingReplaceClick ? () => executeReplaceHotel(detail.id) : undefined} style={awaitingReplaceClick ? { cursor: 'pointer' } : undefined}>
                 {/* Hero header */}
                 <div
-                  className="cmp-col-hero"
+                  className="cmp-col-hero cmp-col-hero-clickable"
                   style={{ backgroundImage: `url(${detail.gallery?.[0] || detail.image})` }}
+                  onClick={() => onViewHotelDetail && onViewHotelDetail(hotels.find((h) => h.id === detail.id))}
                 >
-                  <span className={`cmp-col-tier cmp-col-tier-${colIndex}`}>{tierLabel}</span>
-                  <button className="cmp-col-remove" onClick={() => handleRemoveHotel(detail.id)} title="Remove hotel">
-                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/></svg>
-                  </button>
+                  <span className={`cmp-col-tier cmp-col-tier-${tier.style}`}>{tier.label}</span>
+                  {hotels.length > 1 && (
+                    <button className="cmp-col-remove" onClick={(e) => { e.stopPropagation(); handleRemoveHotel(detail.id) }} title="Remove hotel">
+                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/></svg>
+                    </button>
+                  )}
                   <div className="cmp-col-hero-overlay">
                     <h3 className="cmp-col-name">{detail.name}</h3>
                     <div className="cmp-col-stars">
@@ -957,6 +1055,14 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
                       {hotelCfgs.map((cfg) => { const r = getRoom(detail.id, cfg.roomTypeIndex); return r ? (<span key={cfg.id} className="cmp-col-subtotal-tag">{cfg.quantity}× {r.type}</span>) : null })}
                     </div>
                     <div className="cmp-col-subtotal-amount"><span className="cmp-col-subtotal-label">Hotel total: </span>£{ht.subtotal.toLocaleString()}</div>
+                    {hotels.length > 1 && (
+                      <button className="cmp-col-select-btn" onClick={() => handleSelectHotel(detail.id)}>
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{marginRight: 6, verticalAlign: '-2px'}}>
+                          <path d="M3 8.5l3.5 3.5 6.5-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        Select this hotel
+                      </button>
+                    )}
                   </div>
                 )}
               </div>

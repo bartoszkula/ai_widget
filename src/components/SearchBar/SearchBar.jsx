@@ -258,7 +258,7 @@ const SearchBar = ({ activeView, onViewChange, onHotelSearch, onGroupBooking, on
             <rect x="1" y="1" width="6" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.3" fill="none"/>
             <rect x="9" y="1" width="6" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.3" fill="none"/>
           </svg>
-          Compact
+          Compact view
         </button>
         <button
           className={`view-toggle-btn ${activeView === 'list' ? 'view-toggle-active' : ''}`}
@@ -269,7 +269,7 @@ const SearchBar = ({ activeView, onViewChange, onHotelSearch, onGroupBooking, on
             <line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
             <line x1="1" y1="13" x2="15" y2="13" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
           </svg>
-          List
+          List &amp; Filters
         </button>
         <button
           className={`view-toggle-btn ${activeView === 'map' ? 'view-toggle-active' : ''}`}

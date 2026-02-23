@@ -7,6 +7,7 @@ import './App.css'
 
 function AppInner() {
   const [currentPage, setCurrentPage] = useState('map') // 'map' | 'detail' | 'compare'
+  const [previousPage, setPreviousPage] = useState(null)
   const [selectedHotel, setSelectedHotel] = useState(null)
   const [compareHotels, setCompareHotels] = useState([])
   const [initialRoomQty, setInitialRoomQty] = useState(1)
@@ -22,14 +23,20 @@ function AppInner() {
   }, [])
 
   const openHotelDetail = useCallback((hotel) => {
+    setPreviousPage((prev) => currentPage !== 'detail' ? currentPage : prev)
     setSelectedHotel(hotel)
     setCurrentPage('detail')
-  }, [])
+  }, [currentPage])
 
   const goBack = useCallback(() => {
-    setCurrentPage('map')
+    if (previousPage === 'compare' && compareHotels.length >= 1) {
+      setCurrentPage('compare')
+    } else {
+      setCurrentPage('map')
+    }
     setSelectedHotel(null)
-  }, [])
+    setPreviousPage(null)
+  }, [previousPage, compareHotels])
 
   const openCompare = useCallback(() => {
     setInitialRoomQty(1)
@@ -110,6 +117,7 @@ function AppInner() {
           onRemoveHotel={removeFromCompare}
           onReplaceHotel={replaceHotel}
           onReplaceAllHotels={replaceAllHotels}
+          onViewHotelDetail={openHotelDetail}
           initialQuantity={initialRoomQty}
           initialAdultsPerRoom={initialAdultsPerRoom}
           defaultCheckIn={searchCheckIn}

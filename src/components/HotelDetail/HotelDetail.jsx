@@ -54,11 +54,8 @@ const StarRating = ({ count }) => (
 const DetailSkeleton = ({ onBack }) => (
   <div className="hotel-detail-page">
     <div className="detail-topbar">
-      <button className="detail-back-btn" onClick={onBack}>
-        <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-          <path d="M15 10H5M5 10L10 5M5 10L10 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-        Back to search
+      <button className="detail-back-btn" onClick={onBack} title="Back">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10l6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
       </button>
       <div className="detail-topbar-logos" />
     </div>
@@ -165,12 +162,12 @@ const HotelDetail = ({ hotel, onBack, addToCompare, isInCompare, compareHotels =
     <div className="hotel-detail-page">
       {/* Top bar */}
       <div className="detail-topbar">
-        <button className="detail-back-btn" onClick={onBack}>
-          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-            <path d="M15 10H5M5 10L10 5M5 10L10 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          Back to search
-        </button>
+        <div className="detail-topbar-left">
+          <button className="detail-back-btn" onClick={onBack} title="Back">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10l6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </button>
+          <h1 className="detail-title">Hotel details</h1>
+        </div>
         {/* Collapsed AI pill in topbar */}
         {aiCollapsed && !showGroupPrompt && (
           <div className="detail-ai-collapsed-pill" onClick={() => { setAiCollapsed(false); setShowGroupPrompt(true) }}>
