@@ -1,9 +1,49 @@
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
+import { useState, useMemo, useCallback, useEffect, useRef, Fragment } from 'react'
 import { getHotelDetail } from '../../data/hotelDetails'
 import { hotels as allHotelsData } from '../../data/hotels'
 import { useToast } from '../Toast/Toast'
 import { getPriceIncrease, getDaysUntilEvent } from '../../utils/urgency'
 import './CompareHotels.css'
+
+/* Number ticker — each digit rolls up/down independently */
+const AnimatedPrice = ({ value, className = '' }) => {
+  const prevValue = useRef(value)
+  const tickRef = useRef(0)
+  const [display, setDisplay] = useState({ cur: value, prev: value, tick: 0 })
+  useEffect(() => {
+    if (prevValue.current !== value) {
+      tickRef.current += 1
+      setDisplay({ cur: value, prev: prevValue.current, tick: tickRef.current })
+      prevValue.current = value
+    }
+  }, [value])
+  const maxLen = Math.max(display.cur.length, display.prev.length)
+  const curPad = display.cur.padStart(maxLen)
+  const prevPad = display.prev.padStart(maxLen)
+  return (
+    <span className={`ticker-wrap ${className}`}>
+      {curPad.split('').map((ch, i) => {
+        const pch = prevPad[i] || ''
+        const isDigit = /\d/.test(ch)
+        const wasDigit = /\d/.test(pch)
+        if (!isDigit || !wasDigit || ch === pch) {
+          return <span key={i} className="ticker-static">{ch}</span>
+        }
+        const dir = +ch > +pch ? 'up' : 'down'
+        const delay = `${i * 0.04}s`
+        // tick in key forces React to remount the slot, restarting the CSS animation
+        return (
+          <span key={`${i}-${display.tick}`} className="ticker-slot">
+            <span className={`ticker-roll ticker-roll-${dir}`} style={{ animationDelay: delay }}>
+              <span className="ticker-old">{pch}</span>
+              <span className="ticker-new">{ch}</span>
+            </span>
+          </span>
+        )
+      })}
+    </span>
+  )
+}
 
 const VENUE_POS = [51.5085, 0.0295]
 
@@ -31,8 +71,6 @@ const formatTravelTime = (distKm) => {
 const BOARD_SURCHARGES = {
   'Room Only': 0,
   'Bed & Breakfast': 8,
-  'Half Board': 18,
-  'Full Board': 30,
 }
 
 const CANCEL_OPTIONS = [
@@ -50,11 +88,24 @@ const AI_COLLAPSED_PHRASES = [
   "Unsure where to begin?",
 ]
 
-const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplaceAllHotels, onViewHotelDetail, initialQuantity = 1, initialAdultsPerRoom = 1, defaultCheckIn = '2027-09-07', defaultCheckOut = '2027-09-10' }) => {
+const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplaceAllHotels, onViewHotelDetail, initialQuantity = 1, initialAdultsPerRoom = 1, defaultCheckIn = '2027-09-07', defaultCheckOut = '2027-09-10', savedSimpleConfigs, onAddHotel, onClearSavedConfigs }) => {
   const [showSummary, setShowSummary] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [aiCollapsed, setAiCollapsed] = useState(false)
+  const [aiCollapsing, setAiCollapsing] = useState(false)
   const [aiCollapsedPhrase, setAiCollapsedPhrase] = useState('')
+  const aiManuallyOpened = useRef(false)
+
+  // Smoothly collapse the AI bar with animation before hiding
+  const collapseAi = useCallback(() => {
+    const phrase = AI_COLLAPSED_PHRASES[Math.floor(Math.random() * AI_COLLAPSED_PHRASES.length)]
+    setAiCollapsedPhrase(phrase)
+    setAiCollapsing(true)
+    setTimeout(() => {
+      setAiCollapsing(false)
+      setAiCollapsed(true)
+    }, 500) // match CSS animation duration
+  }, [])
   const [lightboxImg, setLightboxImg] = useState(null)
   const [flashHotelIds, setFlashHotelIds] = useState(new Set())
   const [showShare, setShowShare] = useState(false)
@@ -68,32 +119,33 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
   const [bookingForm, setBookingForm] = useState({ firstName: '', lastName: '', email: '', company: '', vat: '', cardNumber: '', expiry: '', cvv: '' })
   const [showBackToTop, setShowBackToTop] = useState(false)
   const [pageLoading, setPageLoading] = useState(true)
+  const [viewMode, setViewMode] = useState('simple')
   const [specialReqMode, setSpecialReqMode] = useState(false)
   const [specialReqInput, setSpecialReqInput] = useState('')
   const [specialReqChips, setSpecialReqChips] = useState([])
+  const [configPopup, setConfigPopup] = useState(null) // row.id for room config popup
+  const [configDraft, setConfigDraft] = useState(null) // draft copy of row being edited
+  const [calendarPhase, setCalendarPhase] = useState('checkin') // 'checkin' or 'checkout'
+  const [calendarMonth, setCalendarMonth] = useState(() => new Date(2027, 8)) // Sep 2027
+  const [roomPopup, setRoomPopup] = useState(null) // { rowId, hotelId } for room selection popup
   const bodyRef = useRef(null)
+  const smpTableRef = useRef(null)
   const tierMapRef = useRef({})
   const showToast = useToast()
 
   // Build detail objects with distance, sorted cheapest to most expensive
   const details = useMemo(
     () =>
-      hotels
-        .map((h) => ({
-          ...getHotelDetail(h),
-          dist: getDistanceKm(h.position, VENUE_POS),
-        }))
-        .sort((a, b) => {
-          const aMin = Math.min(...(a.rooms || []).map((r) => r.price))
-          const bMin = Math.min(...(b.rooms || []).map((r) => r.price))
-          return aMin - bMin
-        }),
+      hotels.map((h) => ({
+        ...getHotelDetail(h),
+        dist: getDistanceKm(h.position, VENUE_POS),
+      })),
     [hotels],
   )
 
   // Assign tier labels once when hotels first appear, persist across removals
   useEffect(() => {
-    const tierLabels = ['Budget option', 'Mid-range option', 'Premium option']
+    const tierLabels = ['Budget', 'Mid-range', 'Premium']
     const tierStyles = [0, 1, 2]
     details.forEach((d, i) => {
       if (!(d.id in tierMapRef.current)) {
@@ -121,7 +173,7 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
           children: 0,
           childAges: [],
           board: d.rooms[cheapestIdx]?.boardOptions?.[0] || 'Room Only',
-          cancellation: 'moderate',
+          cancellation: 'non-refundable',
           quantity: initialQuantity,
           editing: false,
         },
@@ -129,6 +181,45 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
     })
     return init
   })
+
+  // Simple mode configs: one row per room, shared rows with per-hotel room type
+  const [simpleConfigs, setSimpleConfigs] = useState(() => {
+    // If returning from "Add Hotel", restore saved configs
+    if (savedSimpleConfigs && savedSimpleConfigs.length > 0) {
+      return savedSimpleConfigs
+    }
+    // Fresh initialization
+    const roomTypeByHotel = {}
+    hotels.forEach((h) => {
+      const d = getHotelDetail(h)
+      const cheapestIdx = d.rooms?.length
+        ? d.rooms.reduce((best, r, i) => (r.price < d.rooms[best].price ? i : best), 0)
+        : 0
+      roomTypeByHotel[h.id] = cheapestIdx
+    })
+    const rows = []
+    const qty = Math.max(1, initialQuantity)
+    for (let i = 0; i < qty; i++) {
+      rows.push({
+        id: _nextId++,
+        checkIn: defaultCheckIn,
+        checkOut: defaultCheckOut,
+        adults: initialAdultsPerRoom,
+        children: 0,
+        childAges: [],
+        board: 'Room Only',
+        cancellation: 'non-refundable',
+        quantity: 1,
+        roomTypeByHotel: { ...roomTypeByHotel },
+      })
+    }
+    return rows
+  })
+
+  // Clear saved configs after consuming them (so stale configs don't persist)
+  useEffect(() => {
+    if (savedSimpleConfigs) onClearSavedConfigs()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Initial loading skeleton
   useEffect(() => {
@@ -141,6 +232,16 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
     if (hotels.length < 1) onBack()
   }, [hotels.length, onBack])
 
+  // Auto-collapse AI assistant after 15 seconds on page load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!aiManuallyOpened.current) {
+        collapseAi()
+      }
+    }, 15000)
+    return () => clearTimeout(timer)
+  }, [])
+
   // Sync configs when hotels change (removal)
   useEffect(() => {
     const ids = new Set(hotels.map((h) => h.id))
@@ -151,6 +252,26 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
       }
       return next
     })
+  }, [hotels])
+
+  // Sync simpleConfigs when hotels change
+  useEffect(() => {
+    const hotelIds = hotels.map((h) => h.id)
+    setSimpleConfigs((prev) => prev.map((row) => {
+      const updated = { ...row.roomTypeByHotel }
+      // Remove hotels no longer present
+      Object.keys(updated).forEach((k) => { if (!hotelIds.includes(Number(k))) delete updated[k] })
+      // Add new hotels with cheapest room
+      hotelIds.forEach((hid) => {
+        if (!(hid in updated)) {
+          const d = getHotelDetail(hotels.find((h) => h.id === hid))
+          updated[hid] = d.rooms?.length
+            ? d.rooms.reduce((best, r, i) => (r.price < d.rooms[best].price ? i : best), 0)
+            : 0
+        }
+      })
+      return { ...row, roomTypeByHotel: updated }
+    }))
   }, [hotels])
 
   // Back-to-top scroll listener
@@ -231,7 +352,7 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
               children: 0,
               childAges: [],
               board: d?.rooms?.[nextIdx]?.boardOptions?.[0] || 'Room Only',
-              cancellation: 'moderate',
+              cancellation: 'non-refundable',
               quantity: 1,
               editing: true,
             },
@@ -264,6 +385,155 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
     }))
   }, [])
 
+  /* ── Simple mode config CRUD ── */
+  const updateSimpleConfig = useCallback((rowId, updates) => {
+    setSimpleConfigs((prev) => prev.map((r) => (r.id === rowId ? { ...r, ...updates } : r)))
+  }, [])
+
+  const updateSimpleRoomType = useCallback((rowId, hotelId, roomTypeIndex) => {
+    setSimpleConfigs((prev) => prev.map((r) =>
+      r.id === rowId ? { ...r, roomTypeByHotel: { ...r.roomTypeByHotel, [hotelId]: roomTypeIndex } } : r
+    ))
+  }, [])
+
+  const addSimpleConfig = useCallback(() => {
+    const roomTypeByHotel = {}
+    hotels.forEach((h) => {
+      const d = getHotelDetail(h)
+      const cheapestIdx = d.rooms?.length
+        ? d.rooms.reduce((best, r, i) => (r.price < d.rooms[best].price ? i : best), 0)
+        : 0
+      roomTypeByHotel[h.id] = cheapestIdx
+    })
+    setSimpleConfigs((prev) => [...prev, {
+      id: _nextId++,
+      checkIn: defaultCheckIn,
+      checkOut: defaultCheckOut,
+      adults: 1,
+      children: 0,
+      childAges: [],
+      board: 'Room Only',
+      cancellation: 'non-refundable',
+      quantity: 1,
+      roomTypeByHotel,
+    }])
+  }, [hotels, defaultCheckIn, defaultCheckOut])
+
+  const removeSimpleConfig = useCallback((rowId) => {
+    setSimpleConfigs((prev) => prev.filter((r) => r.id !== rowId))
+  }, [])
+
+  const duplicateSimpleConfig = useCallback((rowId) => {
+    setSimpleConfigs((prev) => {
+      const source = prev.find((r) => r.id === rowId)
+      if (!source) return prev
+      const clone = {
+        ...source,
+        id: _nextId++,
+        roomTypeByHotel: { ...source.roomTypeByHotel },
+        childAges: [...(source.childAges || [])],
+      }
+      const idx = prev.findIndex((r) => r.id === rowId)
+      const next = [...prev]
+      next.splice(idx + 1, 0, clone)
+      return next
+    })
+  }, [])
+
+  /* ── Simple mode helpers ── */
+  const toLocalDateStr = (date) => {
+    const y = date.getFullYear()
+    const m = String(date.getMonth() + 1).padStart(2, '0')
+    const d = String(date.getDate()).padStart(2, '0')
+    return `${y}-${m}-${d}`
+  }
+
+  const fmtShortDate = (dateStr) => {
+    if (!dateStr) return '—'
+    return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+  }
+
+  const fmtDateRange = (checkIn, checkOut) => {
+    if (!checkIn) return '—'
+    const d1 = new Date(checkIn)
+    if (!checkOut) return d1.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+    const d2 = new Date(checkOut)
+    const day1 = d1.getDate()
+    const day2 = d2.getDate()
+    const mon1 = d1.toLocaleDateString('en-GB', { month: 'short' })
+    const mon2 = d2.toLocaleDateString('en-GB', { month: 'short' })
+    const yr = d2.getFullYear()
+    if (mon1 === mon2 && d1.getFullYear() === d2.getFullYear()) {
+      return `${day1} - ${day2} ${mon2} ${yr}`
+    }
+    return `${day1} ${mon1} - ${day2} ${mon2} ${yr}`
+  }
+
+  const formatPax = (row) => {
+    let text = `${row.adults}A`
+    if (row.children > 0) {
+      const ageStr = row.childAges?.length
+        ? `(${row.childAges.map(a => a + 'y').join(',')})`
+        : ''
+      text += ` · ${row.children}C${ageStr}`
+    }
+    return text
+  }
+
+  const formatConfigSummary = (row) => {
+    const dates = fmtDateRange(row.checkIn, row.checkOut)
+    const pax = formatPax(row)
+    const board = row.board
+    const cancel = CANCEL_OPTIONS.find((o) => o.value === row.cancellation)?.label || row.cancellation
+    return `${dates}  ·  ${pax}  ·  ${board}  ·  ${cancel}`
+  }
+
+  // Open config popup with draft copy
+  const openConfigPopup = useCallback((rowId) => {
+    const row = simpleConfigs.find((r) => r.id === rowId)
+    if (!row) return
+    setConfigPopup(rowId)
+    setConfigDraft({ ...row, childAges: [...(row.childAges || [])] })
+    setCalendarPhase('checkin')
+    if (row.checkIn) {
+      const d = new Date(row.checkIn)
+      setCalendarMonth(new Date(d.getFullYear(), d.getMonth()))
+    }
+  }, [simpleConfigs])
+
+  const calendarDays = useMemo(() => {
+    if (!calendarMonth) return []
+    const y = calendarMonth.getFullYear()
+    const m = calendarMonth.getMonth()
+    const firstDay = new Date(y, m, 1).getDay() || 7 // Mon=1
+    const daysInMonth = new Date(y, m + 1, 0).getDate()
+    const cells = []
+    for (let i = 1; i < firstDay; i++) cells.push(null) // leading blanks (Mon start)
+    for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(y, m, d))
+    return cells
+  }, [calendarMonth])
+
+  const handleCalendarDayClick = useCallback((date) => {
+    if (!configDraft) return
+    const dateStr = toLocalDateStr(date)
+    if (calendarPhase === 'checkin') {
+      setConfigDraft((prev) => ({ ...prev, checkIn: dateStr, checkOut: '' }))
+      setCalendarPhase('checkout')
+    } else {
+      if (dateStr > configDraft.checkIn) {
+        setConfigDraft((prev) => ({ ...prev, checkOut: dateStr }))
+        setCalendarPhase('checkin')
+      } else if (dateStr < configDraft.checkIn) {
+        // Clicked before check-in: treat as new check-in, clear checkout
+        setConfigDraft((prev) => ({ ...prev, checkIn: dateStr, checkOut: '' }))
+        // Stay in checkout phase so next click sets checkout
+      } else {
+        // Clicked same day as check-in: restart selection
+        setConfigDraft((prev) => ({ ...prev, checkIn: dateStr, checkOut: '' }))
+      }
+    }
+  }, [configDraft, calendarPhase])
+
   /* ── Computed totals ── */
   const hotelTotals = useMemo(() => {
     return details.map((d) => {
@@ -293,36 +563,71 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
     })
   }, [details, configs])
 
+  // Simple mode totals per hotel
+  const simpleHotelTotals = useMemo(() => {
+    return details.map((d) => {
+      let roomBase = 0, boardSurcharge = 0, cancelSurcharge = 0, totalRooms = 0, totalAdults = 0, totalChildren = 0, roomNights = 0
+      simpleConfigs.forEach((row) => {
+        const rtIdx = row.roomTypeByHotel[d.id] ?? 0
+        const virtualCfg = { ...row, roomTypeIndex: rtIdx }
+        roomBase += getBaseTotal(d.id, virtualCfg)
+        boardSurcharge += getBoardTotal(d.id, virtualCfg)
+        cancelSurcharge += getCancelTotal(d.id, virtualCfg)
+        totalRooms += row.quantity
+        totalAdults += row.adults * row.quantity
+        totalChildren += row.children * row.quantity
+        roomNights += row.quantity * getNights(row.checkIn, row.checkOut)
+      })
+      return {
+        hotelId: d.id,
+        name: d.name,
+        stars: d.stars,
+        totalRooms,
+        totalAdults,
+        totalChildren,
+        totalGuests: totalAdults + totalChildren,
+        roomBase,
+        boardSurcharge,
+        cancelSurcharge,
+        subtotal: roomBase + boardSurcharge + cancelSurcharge,
+        roomNights,
+      }
+    })
+  }, [details, simpleConfigs])
+
+  // Mode-aware totals
+  const activeTotals = viewMode === 'simple' ? simpleHotelTotals : hotelTotals
+
   const grand = useMemo(() => {
+    const src = viewMode === 'simple' ? simpleHotelTotals : hotelTotals
     const g = {
       hotels: details.length,
-      rooms: hotelTotals.reduce((s, t) => s + t.totalRooms, 0),
-      roomTypes: hotelTotals.reduce((s, t) => s + t.cfgs.length, 0),
-      adults: hotelTotals.reduce((s, t) => s + t.totalAdults, 0),
-      children: hotelTotals.reduce((s, t) => s + t.totalChildren, 0),
-      roomNights: hotelTotals.reduce((s, t) => s + t.roomNights, 0),
-      total: hotelTotals.reduce((s, t) => s + t.subtotal, 0),
+      rooms: src.reduce((s, t) => s + t.totalRooms, 0),
+      roomTypes: viewMode === 'simple' ? simpleConfigs.length : hotelTotals.reduce((s, t) => s + (t.cfgs?.length || 0), 0),
+      adults: src.reduce((s, t) => s + t.totalAdults, 0),
+      children: src.reduce((s, t) => s + t.totalChildren, 0),
+      roomNights: src.reduce((s, t) => s + t.roomNights, 0),
+      total: src.reduce((s, t) => s + t.subtotal, 0),
     }
     g.guests = g.adults + g.children
     return g
-  }, [hotelTotals, details])
+  }, [viewMode, hotelTotals, simpleHotelTotals, details, simpleConfigs])
 
-  // Date range across all configs
+  // Date range across all configs (mode-aware)
   const dateRange = useMemo(() => {
     let minIn = null
     let maxOut = null
-    Object.values(configs)
-      .flat()
-      .forEach((c) => {
-        const ci = new Date(c.checkIn)
-        const co = new Date(c.checkOut)
-        if (!minIn || ci < minIn) minIn = ci
-        if (!maxOut || co > maxOut) maxOut = co
-      })
+    const source = viewMode === 'simple' ? simpleConfigs : Object.values(configs).flat()
+    source.forEach((c) => {
+      const ci = new Date(c.checkIn)
+      const co = new Date(c.checkOut)
+      if (!minIn || ci < minIn) minIn = ci
+      if (!maxOut || co > maxOut) maxOut = co
+    })
     const fmt = (d) => (d ? d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '–')
     const fmtY = (d) => (d ? d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '–')
     return { label: `${fmt(minIn)} → ${fmtY(maxOut)}`, checkIn: fmtY(minIn), checkOut: fmtY(maxOut) }
-  }, [configs])
+  }, [viewMode, configs, simpleConfigs])
 
   const handleRemoveHotel = (hotelId) => {
     if (!onRemoveHotel || removingHotelId) return
@@ -378,7 +683,7 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
         children: 0,
         childAges: [],
         board: d.rooms[cheapestIdx]?.boardOptions?.[0] || 'Room Only',
-        cancellation: 'moderate',
+        cancellation: 'non-refundable',
         quantity: initialQuantity,
         editing: false,
       }]
@@ -413,7 +718,7 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
         children: 0,
         childAges: [],
         board: d.rooms[cheapestIdx]?.boardOptions?.[0] || 'Room Only',
-        cancellation: 'moderate',
+        cancellation: 'non-refundable',
         quantity: initialQuantity,
         editing: false,
       }]
@@ -488,6 +793,11 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
 
   // "Add breakfast" — change all room configs to Bed & Breakfast
   const handleAddBreakfast = useCallback(() => {
+    // Update simple mode configs — set board to B&B for all rows
+    setSimpleConfigs((prev) =>
+      prev.map((row) => ({ ...row, board: 'Bed & Breakfast' }))
+    )
+    // Also update legacy configs
     setConfigs((prev) => {
       const next = {}
       for (const [hotelId, cfgs] of Object.entries(prev)) {
@@ -757,7 +1067,7 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
             <button className="cmp-back-arrow" onClick={onBack} title="Back">
               <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10l6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
-            <h1 className="cmp-title">Hotels Compare</h1>
+            <h1 className="cmp-title">Hotels compare and quote</h1>
           </div>
           <div className="cmp-topbar-right">
             <div className="cmp-skeleton-block cmp-skeleton-btn" />
@@ -797,23 +1107,20 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
           <button className="cmp-back-arrow" onClick={onBack} title="Back">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10l6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
-          <h1 className="cmp-title">Hotels Compare</h1>
-          <span className="cmp-title-badge">
-            You're comparing: {grand.hotels} {grand.hotels === 1 ? 'hotel' : 'hotels'} and {grand.roomTypes} room {grand.roomTypes === 1 ? 'type' : 'types'}
-          </span>
-          {aiCollapsed && (
-            <button className="cmp-ai-collapsed-btn" onClick={() => setAiCollapsed(false)}>
-              <span className="cmp-ai-collapsed-emoji">😊</span>
-              <span className="cmp-ai-collapsed-text">{aiCollapsedPhrase}</span>
-            </button>
-          )}
+          <h1 className="cmp-title">Hotels compare and quote</h1>
         </div>
+        {aiCollapsed && (
+          <button className="cmp-ai-collapsed-btn" onClick={() => { aiManuallyOpened.current = true; setAiCollapsed(false) }}>
+            <span className="cmp-ai-collapsed-emoji">😊</span>
+            <span className="cmp-ai-collapsed-text">{aiCollapsedPhrase}</span>
+          </button>
+        )}
         <div className="cmp-topbar-right">
-          <button className="cmp-btn-outline" onClick={generatePDF}>
+          <button className="cmp-btn-outline" onClick={() => showToast('Quote saved', 'success', 2500)}>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{marginRight: 6, verticalAlign: '-2px'}}>
               <path d="M2 12v2h12v-2M8 2v8M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            Save quote PDF
+            Save quote
           </button>
           <button className="cmp-btn-outline" onClick={() => { setShowShare(true); setShareCopied(false); setShareSent(false); setShareEmail('') }}>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{marginRight: 6, verticalAlign: '-2px'}}>
@@ -838,22 +1145,23 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
         </div>
         <div className="cmp-event-right">
           <span className="cmp-event-count">
-            {grand.hotels} of {grand.hotels} hotels
+            {grand.hotels} of 3 hotels
           </span>
           {details.length < 3 && (
-            <button className="cmp-add-hotel-btn" onClick={onBack}>
+            <button className="cmp-add-hotel-btn" onClick={() => onAddHotel(simpleConfigs)}>
               + Add Hotel
             </button>
           )}
         </div>
       </div>
 
+
       {/* ─── Scrollable body ─── */}
       <div className="cmp-body" ref={bodyRef}>
         {/* ─── AI Assistant recommendation ─── */}
-        {!aiCollapsed && (
-          <div className="cmp-ai-bar">
-            <div className="cmp-ai-avatar cmp-ai-avatar-clickable" onClick={() => { setAiCollapsedPhrase(AI_COLLAPSED_PHRASES[Math.floor(Math.random() * AI_COLLAPSED_PHRASES.length)]); setAiCollapsed(true) }} title="Collapse assistant">
+        {(!aiCollapsed || aiCollapsing) && (
+          <div className={`cmp-ai-bar ${aiCollapsing ? 'cmp-ai-bar-collapsing' : ''}`}>
+            <div className="cmp-ai-avatar cmp-ai-avatar-clickable" onClick={collapseAi} title="Collapse assistant">
               <span className="cmp-ai-emoji">😊</span>
             </div>
             <div className="cmp-ai-content">
@@ -908,12 +1216,267 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
           </div>
         )}
 
-        {/* ─── Hotel columns ─── */}
+        {/* ═══ SIMPLE MODE ═══ */}
+        {viewMode === 'simple' && (
+          <>
+            {/* ─── Simple mode grid table ─── */}
+            <div className="smp-table-wrap">
+              <div className="smp-table" ref={smpTableRef} style={{ '--hotel-count': details.length }}>
+                {/* Header row — ID + config + hotel images */}
+                <div className="smp-header smp-cell smp-cell-id">ID</div>
+                <div className="smp-header smp-cell">Room configuration</div>
+                {details.map((detail) => {
+                  const tier = tierMapRef.current[detail.id] || { label: 'Premium', style: 2 }
+                  const travel = formatTravelTime(detail.dist)
+                  return (
+                    <div
+                      key={detail.id}
+                      className={`smp-header smp-cell smp-cell-img ${flashHotelIds.has(detail.id) ? 'cmp-col-flash' : ''} ${removingHotelId === detail.id ? 'cmp-col-removing' : ''}`}
+                      onClick={awaitingReplaceClick ? () => executeReplaceHotel(detail.id) : () => onViewHotelDetail && onViewHotelDetail(hotels.find((h) => h.id === detail.id))}
+                    >
+                      <div className="smp-img-thumb" style={{ backgroundImage: `url(${detail.gallery?.[0] || detail.image})` }}>
+                        <img src={detail.gallery?.[0] || detail.image} alt="" style={{ display: 'none' }} onError={(e) => { e.target.parentElement.style.backgroundImage = `url(https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=500&fit=crop)` }} />
+                        {hotels.length > 1 && (
+                          <button className="smp-remove-btn" onClick={(e) => { e.stopPropagation(); handleRemoveHotel(detail.id) }} title="Remove hotel">
+                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5.333 4V2.667a1.333 1.333 0 011.334-1.334h2.666a1.333 1.333 0 011.334 1.334V4M12.667 4v9.333a1.333 1.333 0 01-1.334 1.334H4.667a1.333 1.333 0 01-1.334-1.334V4h9.334z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          </button>
+                        )}
+                        <div className="smp-img-overlay">
+                          <span className="smp-img-overlay-name">{detail.name}</span>
+                          <div className="smp-img-overlay-stars">
+                            {[...Array(detail.stars)].map((_, i) => <span key={i} className="star-filled">★</span>)}
+                          </div>
+                          <span className="smp-img-overlay-dist">
+                            {detail.dist < 1 ? `${Math.round(detail.dist * 1000)}m` : `${detail.dist.toFixed(1)}km`} · {travel.text}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+                <div className="smp-header smp-cell"></div>
+
+                {/* Data rows */}
+                {simpleConfigs.map((row, rowIdx) => (
+                  <Fragment key={row.id}>
+                    {/* ID */}
+                    <div className={`smp-cell smp-cell-id ${rowIdx % 2 === 1 ? 'smp-cell-alt' : ''}`}>
+                      <span className="smp-id-num">{rowIdx + 1}</span>
+                    </div>
+                    {/* Room configuration — opens config popup */}
+                    <div className={`smp-cell smp-cell-config ${rowIdx % 2 === 1 ? 'smp-cell-alt' : ''}`}>
+                      <button className="smp-config-btn" onClick={() => openConfigPopup(row.id)}>
+                        <span className="smp-config-btn-text">{formatConfigSummary(row)}</span>
+                        <svg width="8" height="5" viewBox="0 0 8 5" fill="none" className="smp-config-btn-arrow"><path d="M1 1l3 3 3-3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      </button>
+                    </div>
+                    {/* Hotel columns — room trigger + price inline */}
+                    {details.map((d) => {
+                      const rtIdx = row.roomTypeByHotel[d.id] ?? 0
+                      const virtualCfg = { ...row, roomTypeIndex: rtIdx }
+                      const cellTotal = getConfigTotal(d.id, virtualCfg)
+                      const selectedRoom = d.rooms?.[rtIdx]
+                      return (
+                        <div key={d.id} className={`smp-cell smp-cell-hotel ${rowIdx % 2 === 1 ? 'smp-cell-alt' : ''}`}>
+                          <div className="smp-hotel-row">
+                            <button className="smp-room-trigger" onClick={() => setRoomPopup({ rowId: row.id, hotelId: d.id })}>
+                              {selectedRoom && <img src={selectedRoom.image} alt="" className="smp-room-trigger-img" />}
+                              <span className="smp-room-trigger-text">{selectedRoom ? selectedRoom.type : 'Select'}</span>
+                              {selectedRoom && <AnimatedPrice className="smp-room-trigger-price" value={`£${selectedRoom.price}`} />}
+                              <svg width="8" height="5" viewBox="0 0 8 5" fill="none" className="smp-room-trigger-arrow"><path d="M1 1l3 3 3-3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                            </button>
+                          </div>
+                        </div>
+                      )
+                    })}
+                    {/* Actions — duplicate + delete */}
+                    <div className={`smp-cell smp-cell-actions ${rowIdx % 2 === 1 ? 'smp-cell-alt' : ''}`}>
+                      <button className="smp-action-btn smp-duplicate-btn" onClick={() => duplicateSimpleConfig(row.id)} title="Duplicate room">
+                        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.5" fill="none"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" strokeWidth="1.5" fill="none"/></svg>
+                      </button>
+                      <button className="smp-action-btn smp-delete-btn" onClick={() => removeSimpleConfig(row.id)} title="Remove room">
+                        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                      </button>
+                    </div>
+                  </Fragment>
+                ))}
+
+                {/* Add room config row — spans the config column */}
+                <div className="smp-cell smp-cell-id" />
+                <div className="smp-cell smp-cell-add-row">
+                  <button className="smp-add-row" onClick={addSimpleConfig}>+ Add room configuration</button>
+                </div>
+                {details.map((d) => <div key={d.id} className="smp-cell smp-cell-hotel" />)}
+                <div className="smp-cell" />
+
+                {/* Totals row */}
+                <div className="smp-cell smp-cell-total smp-cell-id" />
+                <div className="smp-cell smp-cell-total smp-cell-total-label" />
+                {details.map((d) => {
+                  const ht = simpleHotelTotals.find((t) => t.hotelId === d.id)
+                  return (
+                    <div key={d.id} className="smp-cell smp-cell-total smp-cell-hotel">
+                      <div className="smp-hotel-row">
+                        <span className="smp-total-label">Total:</span>
+                        <AnimatedPrice className="smp-cell-price smp-total-price" value={`£${(ht?.subtotal || 0).toLocaleString()}`} />
+                      </div>
+                    </div>
+                  )
+                })}
+                <div className="smp-cell smp-cell-total" />
+              </div>
+            </div>
+
+            {/* ═══ ROOM CONFIG POPUP ═══ */}
+            {configPopup && configDraft && (() => {
+              return (
+                <div className="smp-popup-overlay" onClick={() => { setConfigPopup(null); setConfigDraft(null) }}>
+                  <div className="smp-popup smp-config-popup" onClick={(e) => e.stopPropagation()}>
+                    <div className="smp-popup-header">
+                      <h3 className="smp-popup-title">Room configuration</h3>
+                      <button className="smp-popup-close" onClick={() => { setConfigPopup(null); setConfigDraft(null) }}>×</button>
+                    </div>
+
+                    {/* ── Dates section ── */}
+                    <div className="smp-config-section">
+                      <div className="smp-cal-nav">
+                        <button className="smp-cal-nav-btn" onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1))}>‹</button>
+                        <span className="smp-cal-month">{calendarMonth.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}</span>
+                        <button className="smp-cal-nav-btn" onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1))}>›</button>
+                      </div>
+                      <div className="smp-cal-grid">
+                        {['Mo','Tu','We','Th','Fr','Sa','Su'].map((d) => <div key={d} className="smp-cal-dow">{d}</div>)}
+                        {calendarDays.map((date, i) => {
+                          if (!date) return <div key={`e${i}`} className="smp-cal-empty" />
+                          const ds = toLocalDateStr(date)
+                          const today = toLocalDateStr(new Date())
+                          const isPast = ds < today
+                          const isCheckIn = configDraft.checkIn === ds
+                          const isCheckOut = configDraft.checkOut === ds
+                          const isInRange = configDraft.checkIn && configDraft.checkOut && ds > configDraft.checkIn && ds < configDraft.checkOut
+                          const isEvent = ds >= defaultCheckIn && ds <= defaultCheckOut
+                          return (
+                            <button
+                              key={ds}
+                              className={`smp-cal-day ${isCheckIn ? 'smp-cal-day-in' : ''} ${isCheckOut ? 'smp-cal-day-out' : ''} ${isInRange ? 'smp-cal-day-range' : ''} ${isPast ? 'smp-cal-day-disabled' : ''} ${isEvent ? 'smp-cal-day-event' : ''}`}
+                              disabled={isPast}
+                              onClick={() => handleCalendarDayClick(date)}
+                            >
+                              {date.getDate()}
+                              {isEvent && <span className="smp-cal-event-dot" />}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+
+                    {/* ── Guests, Board & Cancellation ── */}
+                    <div className="smp-config-section">
+                      <div className="smp-pax-form">
+                        <div className="smp-pax-row">
+                          <label className="smp-pax-row-label">Adults</label>
+                          <select className="smp-select smp-pax-select" value={configDraft.adults} onChange={(e) => setConfigDraft((prev) => ({ ...prev, adults: Number(e.target.value) }))}>
+                            {[1, 2, 3, 4].map((n) => <option key={n} value={n}>{n}</option>)}
+                          </select>
+                        </div>
+                        <div className="smp-pax-row">
+                          <label className="smp-pax-row-label">Children</label>
+                          <select className="smp-select smp-pax-select" value={configDraft.children} onChange={(e) => { const count = Number(e.target.value); setConfigDraft((prev) => { const ages = [...(prev.childAges || [])]; while (ages.length < count) ages.push(5); return { ...prev, children: count, childAges: ages.slice(0, count) } }) }}>
+                            {[0, 1, 2, 3].map((n) => <option key={n} value={n}>{n}</option>)}
+                          </select>
+                        </div>
+                        {configDraft.children > 0 && (configDraft.childAges || []).map((age, ci) => (
+                          <div key={ci} className="smp-pax-row">
+                            <label className="smp-pax-row-label">Child {ci + 1} age</label>
+                            <select className="smp-select smp-pax-select" value={age} onChange={(e) => { setConfigDraft((prev) => { const newAges = [...(prev.childAges || [])]; newAges[ci] = Number(e.target.value); return { ...prev, childAges: newAges } }) }}>
+                              {Array.from({ length: 12 }, (_, i) => i + 1).map((a) => <option key={a} value={a}>{a} yr{a > 1 ? 's' : ''}</option>)}
+                            </select>
+                          </div>
+                        ))}
+                        <div className="smp-pax-row">
+                          <label className="smp-pax-row-label">Board type</label>
+                          <select className="smp-select smp-pax-select" value={configDraft.board} onChange={(e) => setConfigDraft((prev) => ({ ...prev, board: e.target.value }))}>
+                            {Object.keys(BOARD_SURCHARGES).map((b) => <option key={b} value={b}>{b}{BOARD_SURCHARGES[b] > 0 ? ` (+£${BOARD_SURCHARGES[b]})` : ''}</option>)}
+                          </select>
+                        </div>
+                        <div className="smp-pax-row">
+                          <label className="smp-pax-row-label">Cancellation</label>
+                          <select className="smp-select smp-pax-select" value={configDraft.cancellation} onChange={(e) => setConfigDraft((prev) => ({ ...prev, cancellation: e.target.value }))}>
+                            {CANCEL_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}{o.pct > 0 ? ` (+${Math.round(o.pct * 100)}%)` : ''}</option>)}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* ── Footer buttons ── */}
+                    <div className="smp-config-footer">
+                      <button className="smp-config-cancel-btn" onClick={() => { setConfigPopup(null); setConfigDraft(null) }}>Cancel</button>
+                      <button className="smp-config-ok-btn" onClick={() => {
+                        updateSimpleConfig(configPopup, {
+                          checkIn: configDraft.checkIn,
+                          checkOut: configDraft.checkOut,
+                          adults: configDraft.adults,
+                          children: configDraft.children,
+                          childAges: configDraft.childAges,
+                          board: configDraft.board,
+                          cancellation: configDraft.cancellation,
+                        })
+                        setConfigPopup(null)
+                        setConfigDraft(null)
+                      }}>OK</button>
+                    </div>
+                  </div>
+                </div>
+              )
+            })()}
+
+            {/* ═══ ROOM SELECTION POPUP ═══ */}
+            {roomPopup && (() => {
+              const popupDetail = details.find((d) => d.id === roomPopup.hotelId)
+              const popupRow = simpleConfigs.find((r) => r.id === roomPopup.rowId)
+              if (!popupDetail || !popupRow) return null
+              const currentRtIdx = popupRow.roomTypeByHotel[popupDetail.id] ?? 0
+              return (
+                <div className="smp-popup-overlay" onClick={() => setRoomPopup(null)}>
+                  <div className="smp-popup smp-popup-room" onClick={(e) => e.stopPropagation()}>
+                    <div className="smp-popup-header">
+                      <h3 className="smp-popup-title">Select room — {popupDetail.name}</h3>
+                      <button className="smp-popup-close" onClick={() => setRoomPopup(null)}>×</button>
+                    </div>
+                    <div className="smp-room-popup-list">
+                      {popupDetail.rooms?.map((r, i) => (
+                        <button
+                          key={i}
+                          className={`smp-room-popup-option ${i === currentRtIdx ? 'smp-room-popup-option-active' : ''}`}
+                          onClick={() => { updateSimpleRoomType(roomPopup.rowId, roomPopup.hotelId, i); setRoomPopup(null) }}
+                        >
+                          <img src={r.image} alt={r.type} className="smp-room-popup-img" />
+                          <div className="smp-room-popup-info">
+                            <span className="smp-room-popup-name">{r.type}</span>
+                            <span className="smp-room-popup-price">£{r.price} <small>per night</small></span>
+                          </div>
+                          {i === currentRtIdx && (
+                            <svg className="smp-room-popup-check" width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.5 3.5 6.5-7" stroke="#F5C518" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )
+            })()}
+
+
+          </>
+        )}
+
+        {/* ═══ ADVANCED MODE ═══ */}
+        {viewMode === 'advanced' && (
         <div className="cmp-columns">
           {details.map((detail, colIndex) => {
             const hotelCfgs = configs[detail.id] || []
             const ht = hotelTotals.find((t) => t.hotelId === detail.id)
-            const tier = tierMapRef.current[detail.id] || { label: 'Premium option', style: 2 }
+            const tier = tierMapRef.current[detail.id] || { label: 'Premium', style: 2 }
             return (
               <div className={`cmp-col ${flashHotelIds.has(detail.id) ? 'cmp-col-flash' : ''} ${removingHotelId === detail.id ? 'cmp-col-removing' : ''} ${awaitingReplaceClick ? 'cmp-col-replace-target' : ''}`} key={detail.id} onClick={awaitingReplaceClick ? () => executeReplaceHotel(detail.id) : undefined} style={awaitingReplaceClick ? { cursor: 'pointer' } : undefined}>
                 {/* Hero header */}
@@ -922,7 +1485,7 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
                   style={{ backgroundImage: `url(${detail.gallery?.[0] || detail.image})` }}
                   onClick={() => onViewHotelDetail && onViewHotelDetail(hotels.find((h) => h.id === detail.id))}
                 >
-                  <span className={`cmp-col-tier cmp-col-tier-${tier.style}`}>{tier.label}</span>
+                  <img src={detail.gallery?.[0] || detail.image} alt="" style={{ display: 'none' }} onError={(e) => { e.target.parentElement.style.backgroundImage = `url(https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=500&fit=crop)` }} />
                   {hotels.length > 1 && (
                     <button className="cmp-col-remove" onClick={(e) => { e.stopPropagation(); handleRemoveHotel(detail.id) }} title="Remove hotel">
                       <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/></svg>
@@ -938,7 +1501,7 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
                     <span className="cmp-col-meta">{detail.address}</span>
                     <span className="cmp-col-dist">
                       <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.24 1 3 3.24 3 6c0 4.5 5 9 5 9s5-4.5 5-9c0-2.76-2.24-5-5-5z" stroke="currentColor" strokeWidth="1.2" fill="none"/><circle cx="8" cy="6" r="1.5" fill="currentColor" /></svg>
-                      {detail.dist < 1 ? `${Math.round(detail.dist * 1000)} m` : `${detail.dist.toFixed(1)} km`} from venue
+                      {detail.dist < 1 ? `${Math.round(detail.dist * 1000)}m` : `${detail.dist.toFixed(1)}km`} from venue
                       <span className="cmp-col-dot">·</span>
                       {(() => { const t = formatTravelTime(detail.dist); return (<>
                         {t.icon === 'walk' ? (
@@ -1069,11 +1632,13 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
             )
           })}
         </div>
+        )}
 
-        {/* ─── Bottom summary cards ─── */}
+        {/* ─── Bottom summary cards (advanced mode only) ─── */}
+        {viewMode === 'advanced' && (
         <div className="cmp-summary">
           <div className="cmp-summary-cards">
-            {hotelTotals.map((t) => (
+            {activeTotals.map((t) => (
               <div className="cmp-summary-card" key={t.hotelId}>
                 <h3 className="cmp-summary-card-title">Cost Breakdown</h3>
                 <div className="cmp-summary-card-header">🏨 {t.name} ({t.totalRooms} {t.totalRooms === 1 ? 'room' : 'rooms'})</div>
@@ -1085,24 +1650,8 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
             ))}
           </div>
         </div>
+        )}
 
-        {/* ─── Price increase urgency notice ─── */}
-        <div className="cmp-urgency-banner">
-          <div className="cmp-urgency-icon">📈</div>
-          <div className="cmp-urgency-content">
-            <span className="cmp-urgency-title">Price increase likely</span>
-            <span className="cmp-urgency-text">
-              Based on demand trends, prices for these hotels are expected to increase by {Math.round(hotels.reduce((sum, h) => sum + getPriceIncrease(h.id), 0) / hotels.length)}% in the next 48 hours. DSEI 2027 is in {getDaysUntilEvent()} days — book now to lock in current rates.
-            </span>
-          </div>
-          <div className="cmp-urgency-hotels">
-            {hotels.map((h) => (
-              <span key={h.id} className="cmp-urgency-hotel-tag">
-                {h.name.length > 20 ? h.name.slice(0, 20) + '…' : h.name}: +{getPriceIncrease(h.id)}%
-              </span>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* ─── Back to top button ─── */}
@@ -1116,15 +1665,13 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
 
       {/* ─── Grand total footer ─── */}
       <div className="cmp-footer">
+        <span className="cmp-footer-quote-label">Your quote:</span>
         <div className="cmp-footer-stats">
           <div className="cmp-footer-stat"><span className="cmp-footer-stat-label">DATE RANGE</span><span className="cmp-footer-stat-value">{dateRange.label}</span></div>
           <div className="cmp-footer-stat"><span className="cmp-footer-stat-label">HOTELS</span><span className="cmp-footer-stat-value">{grand.hotels}</span></div>
           <div className="cmp-footer-stat"><span className="cmp-footer-stat-label">ROOMS</span><span className="cmp-footer-stat-value">{grand.rooms}</span></div>
           <div className="cmp-footer-stat"><span className="cmp-footer-stat-label">GUESTS</span><span className="cmp-footer-stat-value">{grand.adults} {grand.adults === 1 ? 'Adult' : 'Adults'}{grand.children > 0 ? ` + ${grand.children} ${grand.children === 1 ? 'Child' : 'Children'}` : ''}</span></div>
           <div className="cmp-footer-stat"><span className="cmp-footer-stat-label">ROOM-NIGHTS</span><span className="cmp-footer-stat-value">{grand.roomNights}</span></div>
-        </div>
-        <div className="cmp-footer-grand">
-          <div className="cmp-footer-grand-amount"><span className="cmp-footer-grand-prefix">Grand total </span>£{grand.total.toLocaleString()} <small>GBP</small></div>
         </div>
         <button className="cmp-footer-cta" onClick={() => setShowSummary(true)}>{grand.rooms <= 10 ? 'Book rooms →' : 'Request quote →'}</button>
       </div>
@@ -1153,9 +1700,13 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
             </div>
 
             <div className="qs-body">
-              {hotelTotals.map((ht) => {
+              {activeTotals.map((ht) => {
                 const detail = details.find((d) => d.id === ht.hotelId)
                 if (!detail) return null
+                // Build table rows: from configs (advanced) or simpleConfigs (simple)
+                const rowData = viewMode === 'simple'
+                  ? simpleConfigs.map((row) => ({ ...row, roomTypeIndex: row.roomTypeByHotel[ht.hotelId] ?? 0 }))
+                  : (ht.cfgs || [])
                 return (
                   <div className="qs-hotel-section" key={ht.hotelId}>
                     <div className="qs-hotel-header">
@@ -1180,7 +1731,7 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
                         </tr>
                       </thead>
                       <tbody>
-                        {ht.cfgs.map((cfg) => {
+                        {rowData.map((cfg) => {
                           const room = getRoom(ht.hotelId, cfg.roomTypeIndex)
                           if (!room) return null
                           const nights = getNights(cfg.checkIn, cfg.checkOut)
@@ -1223,9 +1774,9 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
             </div>
 
             <div className="qs-actions">
-              <button className="qs-btn-outline" onClick={generatePDF}>
+              <button className="qs-btn-outline" onClick={() => showToast('Quote saved', 'success', 2500)}>
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 14h8M8 2v9M5 8l3 3 3-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                Save quote PDF
+                Save quote
               </button>
               <button className="qs-btn-outline" onClick={() => { setShowSummary(false); setTimeout(() => { setShowShare(true); setShareCopied(false); setShareSent(false); setShareEmail('') }, 100) }}>
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none">

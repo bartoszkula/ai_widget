@@ -308,7 +308,7 @@ export const hotels = [
   {
     id: 26,
     name: "Park Plaza London Riverbank",
-    image: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=400&h=300&fit=crop",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=300&fit=crop",
     price: 178,
     currency: "GBP",
     rating: 4.3,

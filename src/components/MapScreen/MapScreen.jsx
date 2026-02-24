@@ -295,7 +295,7 @@ const MapScreen = ({ onHotelDetailOpen, onOpenCompare, onOpenCompareWithHotels, 
                   return (
                     <div className="popup-card popup-card-clickable" onClick={() => onHotelDetailOpen(hotel)}>
                       <div className="popup-card-img-wrap">
-                        <img src={hotel.image} alt={hotel.name} className="popup-card-img" />
+                        <img src={hotel.image} alt={hotel.name} className="popup-card-img" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop' }} />
                         <span className="popup-card-price">£{hotel.price}</span>
                         <div className="popup-card-overlay">
                           {hotel.promotion && <span className="popup-card-promo">{hotel.promotion}</span>}

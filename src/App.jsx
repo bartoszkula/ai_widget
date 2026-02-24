@@ -14,6 +14,7 @@ function AppInner() {
   const [initialAdultsPerRoom, setInitialAdultsPerRoom] = useState(1)
   const [searchCheckIn, setSearchCheckIn] = useState('2027-09-07')
   const [searchCheckOut, setSearchCheckOut] = useState('2027-09-10')
+  const [savedSimpleConfigs, setSavedSimpleConfigs] = useState(null)
   const showToast = useToast()
 
   const handleDatesChange = useCallback((start, end) => {
@@ -43,11 +44,22 @@ function AppInner() {
     setCurrentPage('compare')
   }, [])
 
+  // Called from "Add Hotel" button on Compare page — save configs before navigating away
+  const handleAddHotel = useCallback((currentConfigs) => {
+    setSavedSimpleConfigs(currentConfigs)
+    setCurrentPage('map')
+  }, [])
+
+  const clearSavedConfigs = useCallback(() => {
+    setSavedSimpleConfigs(null)
+  }, [])
+
   // Called from AI chat Group flow — set specific hotels + quantity and open compare
   const openCompareWithHotels = useCallback((selectedHotels, qty, adultsPerRoom) => {
     setCompareHotels(selectedHotels)
     setInitialRoomQty(qty)
     setInitialAdultsPerRoom(adultsPerRoom || 1)
+    setSavedSimpleConfigs(null)
     setCurrentPage('compare')
   }, [])
 
@@ -122,6 +134,9 @@ function AppInner() {
           initialAdultsPerRoom={initialAdultsPerRoom}
           defaultCheckIn={searchCheckIn}
           defaultCheckOut={searchCheckOut}
+          savedSimpleConfigs={savedSimpleConfigs}
+          onAddHotel={handleAddHotel}
+          onClearSavedConfigs={clearSavedConfigs}
         />
       )}
     </div>

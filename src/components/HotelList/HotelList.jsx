@@ -271,6 +271,7 @@ const HotelList = ({ hotels, allHotels, activeHotel, onHotelClick, onCompare, is
                       alt={hotel.name}
                       className="hotel-list-item-image"
                       loading="lazy"
+                      onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop' }}
                     />
                     <div className="hotel-list-item-price-badge">£{hotel.price}</div>
                     {hotel.promotion && (

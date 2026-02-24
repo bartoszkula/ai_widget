@@ -21,6 +21,7 @@
   border-bottom: 1px solid #2a2a2a;
   flex-shrink: 0;
   z-index: 20;
+  position: relative;
 }
 
 .cmp-topbar-left {
@@ -68,6 +69,13 @@
 }
 
 .cmp-ai-collapsed-btn {
+  position: absolute;
+  /* Center the whole pill, not just the emoji */
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -76,8 +84,8 @@
   border-radius: 20px;
   padding: 5px 16px 5px 6px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  animation: cmpAiCollapsedSlide 0.35s ease both;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  animation: cmpAiCollapsedSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 .cmp-ai-collapsed-btn:hover {
@@ -106,8 +114,8 @@
 }
 
 @keyframes cmpAiCollapsedSlide {
-  from { opacity: 0; transform: translateX(-12px); }
-  to   { opacity: 1; transform: translateX(0); }
+  0%   { opacity: 0; transform: scale(0.85) translateY(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .cmp-topbar-right {
@@ -237,6 +245,55 @@
   background: #333;
 }
 
+/* ─── VIEW MODE TOGGLE ─── */
+.cmp-view-toggle-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 28px;
+  margin-top: 12px;
+}
+
+.cmp-view-toggle-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #888;
+}
+
+.cmp-view-toggle {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.5px solid #333;
+}
+
+.cmp-view-toggle-btn {
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cmp-view-toggle-btn:first-child {
+  border-right: 1.5px solid #333;
+}
+
+.cmp-view-toggle-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.cmp-view-toggle-active {
+  background: #F5C518 !important;
+  color: #1a1a1a !important;
+}
+
 /* ─── AI ASSISTANT BAR ─── */
 .cmp-ai-bar {
   display: flex;
@@ -247,11 +304,32 @@
   max-width: 560px;
   margin-left: auto;
   margin-right: auto;
+  transform-origin: top center;
 }
 
 @keyframes cmpAiFadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Collapse animation — smoothly shrinks and floats up toward the topbar */
+.cmp-ai-bar-collapsing {
+  animation: cmpAiCollapse 0.5s cubic-bezier(0.4, 0, 0.6, 1) forwards !important;
+  pointer-events: none;
+}
+
+@keyframes cmpAiCollapse {
+  0%   { opacity: 1; transform: scale(1) translateY(0); max-height: 200px; margin-bottom: 18px; }
+  100% { opacity: 0; transform: scale(0.4) translateY(-50px); max-height: 0; margin-bottom: 0; }
+}
+
+.cmp-ai-bar-collapsing .cmp-ai-content {
+  animation: cmpAiContentFade 0.25s ease forwards;
+}
+
+@keyframes cmpAiContentFade {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 .cmp-ai-avatar {
@@ -319,6 +397,20 @@
   font-family: inherit;
   transition: all 0.15s ease;
   white-space: nowrap;
+  animation: cmpChipIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.cmp-ai-chip:nth-child(1) { animation-delay: 0s; }
+.cmp-ai-chip:nth-child(2) { animation-delay: 0.12s; }
+.cmp-ai-chip:nth-child(3) { animation-delay: 0.24s; }
+.cmp-ai-chip:nth-child(4) { animation-delay: 0.36s; }
+.cmp-ai-chip:nth-child(5) { animation-delay: 0.48s; }
+.cmp-ai-chip:nth-child(6) { animation-delay: 0.60s; }
+.cmp-ai-chip:nth-child(7) { animation-delay: 0.72s; }
+.cmp-ai-chip:nth-child(8) { animation-delay: 0.84s; }
+
+@keyframes cmpChipIn {
+  from { opacity: 0; transform: translateY(6px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .cmp-ai-chip:hover {
@@ -440,7 +532,7 @@
 .cmp-col {
   flex: 1 1 0;
   min-width: 0;
-  max-width: calc((100% - 32px) / 3);
+  max-width: calc((100% - 48px) / 4);
   display: flex;
   flex-direction: column;
   background: #151515;
@@ -492,7 +584,7 @@
 /* ─── HOTEL HERO HEADER ─── */
 .cmp-col-hero {
   position: relative;
-  height: 180px;
+  height: 207px;
   background-size: cover;
   background-position: center;
   flex-shrink: 0;
@@ -1112,7 +1204,7 @@
 .cmp-summary-card {
   flex: 1 1 0;
   min-width: 0;
-  max-width: calc((100% - 32px) / 3);
+  max-width: calc((100% - 48px) / 4);
   background: #151515;
   border: 1px solid #222;
   border-radius: 12px;
@@ -1235,6 +1327,15 @@
   border-top: 1px solid #2a2a2a;
   flex-shrink: 0;
   z-index: 20;
+}
+
+.cmp-footer-quote-label {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: 'Inter', sans-serif;
 }
 
 .cmp-footer-stats {
@@ -1362,12 +1463,12 @@
     gap: 10px 16px;
   }
 
-  .cmp-footer-grand-amount {
-    font-size: 20px;
+  .cmp-footer-quote-label {
+    font-size: 16px;
   }
 
   .cmp-col-hero {
-    height: 140px;
+    height: 161px;
   }
 }
 
@@ -1386,12 +1487,12 @@
     align-items: stretch;
   }
 
-  .cmp-footer-stats {
-    justify-content: space-between;
+  .cmp-footer-quote-label {
+    font-size: 15px;
   }
 
-  .cmp-footer-grand {
-    text-align: center;
+  .cmp-footer-stats {
+    justify-content: space-between;
   }
 
   .cmp-footer-cta {
@@ -2557,5 +2658,1038 @@
     width: 100%;
     justify-content: center;
     text-align: center;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   SIMPLE MODE — Row-based grid view
+   ═══════════════════════════════════════════ */
+
+/* ─── Grid table ─── */
+.smp-table-wrap {
+  margin: 0 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  border: 1px solid #2a2a2a;
+}
+
+.smp-table {
+  display: grid;
+  /* Fixed column size: each hotel gets at most 1/4 of available space, never grows when hotels are removed */
+  grid-template-columns: 36px 503px repeat(var(--hotel-count), minmax(78px, calc((100vw - 36px - 503px - 56px - 48px) / 4))) 56px;
+  min-width: 700px;
+}
+
+/* ─── Hotel image cells (in header row) ─── */
+.smp-cell-img {
+  padding: 6px 4px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  background: #1a1a1a;
+  cursor: pointer;
+  min-height: auto;
+}
+
+.smp-cell-img:hover .smp-img-overlay-name {
+  color: #F5C518;
+}
+
+.smp-img-thumb {
+  width: 100%;
+  height: 146px;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  background-color: #2a2a2a;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ─── Image overlay with gradient ─── */
+.smp-img-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 8px 7px;
+  background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0.4) 75%, rgba(0,0,0,0.15) 90%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.smp-img-overlay-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.15s ease;
+}
+
+.smp-img-overlay-stars {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  font-size: 13px;
+}
+
+.smp-img-overlay-stars .star-filled {
+  color: #F5C518;
+  font-size: 12px;
+}
+
+.smp-img-overlay-dist {
+  font-size: 10px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── Remove hotel button (on image) ─── */
+.smp-remove-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(200, 40, 40, 0.7);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  z-index: 2;
+  line-height: 0;
+}
+
+.smp-remove-btn:hover {
+  background: rgba(220, 40, 40, 0.95);
+  transform: scale(1.1);
+}
+
+/* ─── Header cells ─── */
+.smp-header {
+  background: #1a1a1a !important;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+  border-bottom: 2px solid #2a2a2a !important;
+}
+
+
+/* ─── ID column ─── */
+.smp-cell-id {
+  align-items: center;
+  justify-content: center;
+  padding: 4px 2px;
+}
+
+.smp-id-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+}
+
+/* ─── Totals row ─── */
+.smp-cell-total {
+  background: #1a1a1a !important;
+  border-bottom: none;
+  border-top: 2px solid #2a2a2a;
+}
+
+.smp-cell-total-label {
+  font-size: 15px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: right;
+  padding-right: 10px;
+}
+
+.smp-cell-total.smp-cell-hotel {
+  align-items: center;
+  justify-content: center;
+}
+
+.smp-cell-total .smp-hotel-row {
+  justify-content: flex-end;
+}
+
+.smp-total-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  margin-right: 4px;
+}
+.smp-cell-price.smp-total-price {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+/* ─── Number ticker animation ─── */
+.ticker-wrap {
+  display: inline-flex;
+  align-items: baseline;
+  overflow: visible;
+}
+.ticker-static {
+  display: inline-block;
+}
+.ticker-slot {
+  display: inline-block;
+  height: 1.2em;
+  overflow: hidden;
+  vertical-align: baseline;
+}
+.ticker-roll {
+  display: flex;
+  flex-direction: column;
+}
+.ticker-old, .ticker-new {
+  display: block;
+  height: 1.2em;
+  line-height: 1.2em;
+}
+/* New digit briefly highlights gold then fades to inherit */
+@keyframes tickerColor {
+  0%   { color: #F5C518; }
+  100% { color: inherit; }
+}
+/* Roll UP: old slides up out, new slides up in */
+@keyframes tickerUp {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-1.2em); }
+}
+/* Roll DOWN: new on top, old below — start showing old, slide to new */
+@keyframes tickerDown {
+  0%   { transform: translateY(-1.2em); }
+  100% { transform: translateY(0); }
+}
+.ticker-roll-up {
+  animation: tickerUp 0.45s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+.ticker-roll-up .ticker-new {
+  animation: tickerColor 0.7s 0.25s ease-out both;
+}
+.ticker-roll-down .ticker-old { order: 2; }
+.ticker-roll-down .ticker-new { order: 1; }
+.ticker-roll-down {
+  animation: tickerDown 0.45s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+.ticker-roll-down .ticker-new {
+  animation: tickerColor 0.7s 0.25s ease-out both;
+}
+
+/* ─── Data cells ─── */
+.smp-cell {
+  padding: 8px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  background: #151515;
+  border-bottom: 1px solid #1f1f1f;
+  min-height: 52px;
+}
+
+.smp-cell-alt {
+  background: #191919;
+}
+
+/* ─── Selects ─── */
+.smp-select {
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 5px;
+  color: #ddd;
+  font-size: 13px;
+  padding: 6.5px 6px;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  padding-right: 20px;
+}
+
+.smp-select:focus {
+  border-color: #F5C518;
+  outline: none;
+}
+
+.smp-select option {
+  background: #222;
+  color: #ddd;
+}
+
+/* ─── Hotel column cells ─── */
+.smp-cell-hotel {
+  align-items: stretch;
+  gap: 4px;
+}
+
+.smp-hotel-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.smp-hotel-row .smp-room-dropdown {
+  flex: 1;
+  min-width: 0;
+}
+
+.smp-cell-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: #F5C518;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+/* ─── Config button (merged Dates + PAX + Board + Cancel) ─── */
+.smp-config-btn {
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 5px;
+  color: #ddd;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6.5px 8px;
+  cursor: pointer;
+  font-family: inherit;
+  width: 100%;
+  text-align: left;
+  transition: border-color 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-sizing: border-box;
+}
+
+.smp-config-btn:hover {
+  border-color: #F5C518;
+  color: #fff;
+}
+
+.smp-config-btn-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.smp-config-btn-arrow {
+  flex-shrink: 0;
+  color: #666;
+}
+
+/* ─── Config popup ─── */
+.smp-popup.smp-config-popup {
+  width: 345px;
+  max-width: 95vw;
+}
+
+.smp-config-section {
+  margin-bottom: 16px;
+}
+
+.smp-config-section-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.smp-config-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #2a2a2a;
+}
+
+.smp-config-cancel-btn {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: #bbb;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 22px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.smp-config-cancel-btn:hover {
+  background: #333;
+  color: #fff;
+}
+
+.smp-config-ok-btn {
+  background: #F5C518;
+  border: none;
+  border-radius: 8px;
+  color: #000;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 28px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.smp-config-ok-btn:hover {
+  background: #ffd84d;
+}
+
+/* ─── Room trigger button (in grid cell) ─── */
+.smp-room-trigger {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: 1;
+  min-width: 0;
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 5px;
+  padding: 4.5px 5px;
+  cursor: pointer;
+  font-family: inherit;
+  color: #ddd;
+  font-size: 13px;
+  transition: border-color 0.15s ease;
+}
+
+.smp-room-trigger:hover {
+  border-color: #F5C518;
+}
+
+.smp-room-trigger-img {
+  width: 26px;
+  height: 20px;
+  border-radius: 3px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.smp-room-trigger-text {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.smp-room-trigger-price {
+  font-size: 15px;
+  font-weight: 700;
+  color: #F5C518;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.smp-room-trigger-arrow {
+  flex-shrink: 0;
+  color: #666;
+  margin-left: auto;
+}
+
+/* ─── Room selection popup ─── */
+.smp-popup-room {
+  width: 380px;
+}
+
+.smp-room-popup-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.smp-room-popup-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  background: #222;
+  border: 1.5px solid #333;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  color: #ccc;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.smp-room-popup-option:hover {
+  border-color: #555;
+  background: #2a2a2a;
+}
+
+.smp-room-popup-option-active {
+  border-color: #F5C518;
+  background: rgba(245, 197, 24, 0.06);
+}
+
+.smp-room-popup-img {
+  width: 72px;
+  height: 50px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.smp-room-popup-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.smp-room-popup-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.smp-room-popup-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: #F5C518;
+}
+
+.smp-room-popup-price small {
+  font-size: 11px;
+  font-weight: 400;
+  color: #888;
+}
+
+.smp-room-popup-check {
+  flex-shrink: 0;
+}
+
+/* ─── Actions cell (duplicate + delete) ─── */
+.smp-cell-actions {
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.smp-action-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.smp-duplicate-btn:hover {
+  color: #F5C518;
+  border-color: rgba(245, 197, 24, 0.3);
+  background: rgba(245, 197, 24, 0.08);
+}
+
+.smp-action-btn.smp-delete-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+}
+
+.smp-action-btn.smp-delete-btn:hover {
+  color: #ff6b6b;
+  border-color: rgba(255, 107, 107, 0.3);
+  background: rgba(255, 107, 107, 0.08);
+}
+
+/* ─── Add room button ─── */
+.smp-add-row {
+  margin: 12px 16px;
+  padding: 10px 24px;
+  background: #F5C518;
+  border: none;
+  border-radius: 8px;
+  color: #1a1a1a;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  width: auto;
+  display: inline-block;
+  text-align: center;
+}
+
+.smp-add-row:hover {
+  background: #e6b600;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(245, 197, 24, 0.3);
+}
+
+/* ─── Per-hotel subtotal cards ─── */
+.smp-subtotals {
+  display: grid;
+  grid-template-columns: repeat(var(--hotel-count), 1fr);
+  gap: 12px;
+  padding: 8px 16px 16px;
+}
+
+.smp-subtotal-card {
+  background: #1a1a1a;
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid #2a2a2a;
+}
+
+.smp-subtotal-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.smp-subtotal-rooms {
+  font-size: 11px;
+  color: #777;
+}
+
+.smp-subtotal-amount {
+  font-size: 20px;
+  font-weight: 700;
+  color: #F5C518;
+  margin-top: 4px;
+}
+
+/* ═══════════════════════════════════════════
+   SIMPLE MODE — Popup modals (Calendar & PAX)
+   ═══════════════════════════════════════════ */
+
+.smp-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: smpFadeIn 0.15s ease;
+}
+
+@keyframes smpFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.smp-popup {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 20px 24px 24px;
+  width: 340px;
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  animation: smpPopIn 0.2s ease;
+}
+
+.smp-popup-sm {
+  width: 300px;
+}
+
+@keyframes smpPopIn {
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.smp-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.smp-popup-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.smp-popup-close {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: transparent;
+  color: #888;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.smp-popup-close:hover {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+
+/* ─── Calendar ─── */
+.smp-cal-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 8px 0;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.smp-cal-tag {
+  font-size: 12px;
+  font-weight: 500;
+  color: #777;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #222;
+  border: 1px solid #333;
+  transition: all 0.15s ease;
+}
+
+.smp-cal-tag-active {
+  color: #F5C518;
+  border-color: #F5C518;
+  background: rgba(245, 197, 24, 0.08);
+}
+
+.smp-cal-arrow {
+  color: #555;
+  font-size: 14px;
+}
+
+.smp-cal-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  width: 270px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.smp-cal-nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: transparent;
+  color: #ccc;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.smp-cal-nav-btn:hover {
+  border-color: #F5C518;
+  color: #F5C518;
+}
+
+.smp-cal-month {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.smp-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 36px);
+  gap: 3px;
+  justify-content: center;
+}
+
+.smp-cal-dow {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  padding: 4px 0 6px;
+}
+
+.smp-cal-empty {
+  aspect-ratio: 1;
+}
+
+.smp-cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #ccc;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.12s ease;
+  position: relative;
+}
+
+.smp-cal-event-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #F5C518;
+  position: absolute;
+  bottom: 3px;
+}
+
+.smp-cal-day:hover:not(:disabled) {
+  background: #2a2a2a;
+  border-color: #444;
+}
+
+.smp-cal-day-in {
+  background: rgba(245, 197, 24, 0.15) !important;
+  color: #F5C518 !important;
+  font-weight: 700;
+  border: 2px solid #F5C518 !important;
+}
+
+.smp-cal-day-out {
+  background: rgba(245, 197, 24, 0.15) !important;
+  color: #F5C518 !important;
+  font-weight: 700;
+  border: 2px solid #F5C518 !important;
+}
+
+.smp-cal-day-range {
+  background: rgba(245, 197, 24, 0.12);
+  color: #F5C518;
+  border-color: rgba(245, 197, 24, 0.2);
+}
+
+.smp-cal-day-disabled {
+  color: #444 !important;
+  cursor: not-allowed;
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+/* ─── PAX popup form ─── */
+.smp-pax-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.smp-pax-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.smp-pax-row-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #ccc;
+  width: 110px;
+  flex-shrink: 0;
+}
+
+.smp-pax-select {
+  flex: 1;
+  min-width: 80px;
+}
+
+.smp-popup-done {
+  width: 100%;
+  padding: 10px;
+  background: #F5C518;
+  border: none;
+  border-radius: 8px;
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.smp-popup-done:hover {
+  background: #e6b600;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(245, 197, 24, 0.3);
+}
+
+/* ─── Simple mode tablet ─── */
+@media (max-width: 768px) {
+  .smp-table-wrap {
+    margin: 0 12px;
+  }
+
+  .smp-table {
+    grid-template-columns: 30px 411px repeat(var(--hotel-count), minmax(60px, calc((100vw - 30px - 411px - 48px - 36px) / 4))) 48px;
+  }
+
+  .smp-img-thumb {
+    height: 92px;
+    border-radius: 6px;
+  }
+
+  .smp-add-row {
+    margin: 10px 12px;
+    width: calc(100% - 24px);
+  }
+
+  .smp-subtotals {
+    padding: 8px 12px 12px;
+    gap: 8px;
+  }
+
+  .smp-popup {
+    width: 320px;
+    padding: 16px 18px 20px;
+  }
+}
+
+/* ─── Simple mode mobile ─── */
+@media (max-width: 480px) {
+  .smp-table-wrap {
+    margin: 0 8px;
+  }
+
+  .smp-table {
+    grid-template-columns: 26px 344px repeat(var(--hotel-count), minmax(42px, calc((100vw - 26px - 344px - 40px - 24px) / 4)) ) 40px;
+    font-size: 10px;
+  }
+
+  .smp-cell {
+    padding: 6px 5px;
+    min-height: 44px;
+  }
+
+  .smp-img-thumb {
+    height: 69px;
+    border-radius: 5px;
+  }
+
+  .smp-img-overlay-name {
+    font-size: 9px;
+  }
+
+  .smp-img-overlay-dist {
+    font-size: 7px;
+  }
+
+  .smp-config-btn {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+
+  .smp-popup.smp-config-popup {
+    width: 92vw;
+  }
+
+  .smp-select {
+    font-size: 10px;
+    padding: 4px 5px;
+  }
+
+  .smp-cell-price {
+    font-size: 13px;
+  }
+
+  .smp-add-row {
+    margin: 8px;
+    width: calc(100% - 16px);
+  }
+
+  .smp-subtotals {
+    grid-template-columns: 1fr;
+    padding: 8px;
+  }
+
+  .smp-subtotal-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .smp-subtotal-amount {
+    font-size: 18px;
+    margin-top: 0;
+  }
+
+  .smp-popup {
+    width: 92vw;
+    padding: 14px 14px 18px;
+  }
+
+  .smp-popup-sm {
+    width: 88vw;
+  }
+
+  .smp-popup-room {
+    width: 92vw;
+  }
+
+  .smp-remove-btn {
+    font-size: 11px;
+    padding: 4px 10px;
   }
 }

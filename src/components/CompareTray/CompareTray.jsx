@@ -22,7 +22,7 @@ const CompareTray = ({ compareHotels, onRemove, onCompare, onTrayClick }) => {
         <div className="compare-tray-items">
           {compareHotels.map((hotel) => (
             <div key={hotel.id} className="compare-tray-item">
-              <img src={hotel.image} alt={hotel.name} className="compare-tray-img" />
+              <img src={hotel.image} alt={hotel.name} className="compare-tray-img" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop' }} />
               <div className="compare-tray-info">
                 <span className="compare-tray-name">{hotel.name}</span>
                 <span className="compare-tray-price">£{hotel.price}</span>
