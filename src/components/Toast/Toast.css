@@ -21,7 +21,7 @@
   border: 1px solid #2a2a2a;
   border-radius: 10px;
   padding: 12px 20px;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 500;
   color: #ddd;
   font-family: 'Inter', sans-serif;
@@ -118,7 +118,7 @@
 
   .toast {
     white-space: normal;
-    font-size: 12px;
+    font-size: 13.8px;
     padding: 10px 16px;
   }
 }

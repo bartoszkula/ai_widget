@@ -49,7 +49,7 @@
 }
 
 .hotel-list-count {
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 500;
   color: #999;
 }
@@ -63,7 +63,7 @@
   border: 1px solid #444;
   border-radius: 6px;
   padding: 4px 10px;
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 500;
   color: #ccc;
   cursor: pointer;
@@ -84,7 +84,7 @@
 .filter-badge {
   background: #F5C518;
   color: #1a1a1a;
-  font-size: 9px;
+  font-size: 10.3px;
   font-weight: 700;
   width: 16px;
   height: 16px;
@@ -111,7 +111,7 @@
 }
 
 .filter-label {
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 600;
   color: #aaa;
   text-transform: uppercase;
@@ -195,7 +195,7 @@
   transform: translateX(-50%);
   background: #333;
   color: #F5C518;
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 600;
   padding: 2px 6px;
   border-radius: 4px;
@@ -218,7 +218,7 @@
   border: 1px solid #444;
   border-radius: 6px;
   padding: 4px 8px;
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 500;
   color: #ccc;
   cursor: pointer;
@@ -253,7 +253,7 @@
   border: 1px solid #444;
   border-radius: 6px;
   padding: 4px 6px;
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 500;
   color: #ccc;
   cursor: pointer;
@@ -278,7 +278,7 @@
   background: none;
   border: none;
   color: #F5C518;
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 500;
   cursor: pointer;
   font-family: inherit;
@@ -299,7 +299,7 @@
 }
 
 .sort-label {
-  font-size: 11px;
+  font-size: 12.6px;
   color: #aaa;
   font-weight: 500;
   white-space: nowrap;
@@ -311,7 +311,7 @@
   border: 1px solid #444;
   border-radius: 8px;
   padding: 5px 26px 5px 9px;
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 500;
   color: #eee;
   cursor: pointer;
@@ -408,7 +408,7 @@
   text-align: center;
   padding: 24px 12px;
   color: #999;
-  font-size: 13px;
+  font-size: 14.9px;
 }
 
 /* Fade transition wrapper for list items */
@@ -477,7 +477,7 @@
   background: #F5C518;
   color: #1a1a1a;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 14.9px;
   padding: 4px 10px;
   border-radius: 6px;
   letter-spacing: -0.2px;
@@ -490,7 +490,7 @@
   background: #F5C518;
   color: #1a1a1a;
   font-weight: 600;
-  font-size: 9px;
+  font-size: 10.3px;
   padding: 3px 8px;
   border-radius: 4px;
   text-transform: uppercase;
@@ -510,7 +510,7 @@
 }
 
 .hotel-list-item-name {
-  font-size: 12.5px;
+  font-size: 14.4px;
   font-weight: 600;
   color: #ffffff;
   margin: 0;
@@ -534,7 +534,7 @@
 }
 
 .hotel-list-item-rating {
-  font-size: 11px;
+  font-size: 12.6px;
   color: #999;
 }
 
@@ -547,7 +547,7 @@
   display: flex;
   align-items: center;
   gap: 3px;
-  font-size: 10px;
+  font-size: 11.5px;
   color: #999;
   font-weight: 500;
 }
@@ -582,7 +582,7 @@
   border: 1px solid #333;
   border-radius: 4px;
   padding: 1px 6px;
-  font-size: 9px;
+  font-size: 10.3px;
   font-weight: 500;
   color: #aaa;
   white-space: nowrap;
@@ -590,7 +590,7 @@
 
 /* Cancellation tag in list */
 .hotel-list-cancel-tag {
-  font-size: 9px;
+  font-size: 10.3px;
   font-weight: 600;
   padding: 1px 7px;
   border-radius: 4px;
@@ -620,7 +620,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 500;
   color: #ff6b6b;
 }
@@ -647,7 +647,7 @@
   border: 1.5px solid #444;
   border-radius: 6px;
   padding: 6.5px 0;
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 600;
   color: #ccc;
   cursor: pointer;
@@ -691,11 +691,11 @@
   }
 
   .hotel-list-item-name {
-    font-size: 12px;
+    font-size: 13.8px;
   }
 
   .hotel-list-item-price-badge {
-    font-size: 12px;
+    font-size: 13.8px;
     padding: 3px 8px;
   }
 
@@ -742,11 +742,11 @@
   }
 
   .hotel-list-item-name {
-    font-size: 12px;
+    font-size: 13.8px;
   }
 
   .hotel-list-item-price-badge {
-    font-size: 12px;
+    font-size: 13.8px;
     padding: 3px 8px;
   }
 

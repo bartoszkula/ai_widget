@@ -40,7 +40,7 @@
   background: #F5C518;
   color: #1a1a1a;
   font-weight: 700;
-  font-size: 11px;
+  font-size: 12.6px;
   padding: 3px 8px;
   border-radius: 5px;
   letter-spacing: -0.2px;
@@ -53,7 +53,7 @@
   background: #F5C518;
   color: #1a1a1a;
   font-weight: 600;
-  font-size: 8px;
+  font-size: 9.2px;
   padding: 2px 6px;
   border-radius: 3px;
   letter-spacing: 0.2px;
@@ -67,7 +67,7 @@
 }
 
 .hotel-card-name {
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 600;
   color: #ffffff;
   margin-bottom: 4px;
@@ -96,14 +96,14 @@
 }
 
 .hotel-card-rating-score {
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 600;
   color: #F5C518;
   margin-left: auto;
 }
 
 .hotel-card-reviews {
-  font-size: 10px;
+  font-size: 11.5px;
   color: #999;
   font-weight: 400;
 }
@@ -113,7 +113,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 9px;
+  font-size: 10.3px;
   font-weight: 500;
   color: #ff6b6b;
   margin-top: 3px;
@@ -145,7 +145,7 @@
   border: 1.5px solid #444;
   border-radius: 5px;
   padding: 5.5px 0;
-  font-size: 9px;
+  font-size: 10.3px;
   font-weight: 600;
   color: #ccc;
   cursor: pointer;
@@ -195,16 +195,16 @@
   }
 
   .hotel-card-name {
-    font-size: 10px;
+    font-size: 11.5px;
   }
 
   .hotel-card-price-badge {
-    font-size: 10px;
+    font-size: 11.5px;
     padding: 2px 6px;
   }
 
   .hotel-card-promotion {
-    font-size: 7px;
+    font-size: 8px;
     padding: 2px 5px;
     bottom: 5px;
     left: 6px;
@@ -227,12 +227,12 @@
   }
 
   .hotel-card-name {
-    font-size: 9.5px;
+    font-size: 10.9px;
     margin-bottom: 3px;
   }
 
   .hotel-card-price-badge {
-    font-size: 9px;
+    font-size: 10.3px;
     padding: 2px 5px;
     top: 6px;
     left: 6px;
@@ -253,15 +253,15 @@
   }
 
   .hotel-card-rating-score {
-    font-size: 9px;
+    font-size: 10.3px;
   }
 
   .hotel-card-reviews {
-    font-size: 9px;
+    font-size: 10.3px;
   }
 
   .hotel-card-promotion {
-    font-size: 6.5px;
+    font-size: 7.5px;
     padding: 2px 4px;
     bottom: 4px;
     left: 6px;

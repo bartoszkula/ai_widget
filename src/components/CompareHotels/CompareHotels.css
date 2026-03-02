@@ -52,7 +52,7 @@
 }
 
 .cmp-title {
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 700;
   color: #fff;
   margin: 0;
@@ -63,7 +63,7 @@
   border: 1px solid #3a3a3a;
   border-radius: 20px;
   padding: 4px 14px;
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 600;
   color: #ccc;
 }
@@ -101,12 +101,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 16.1px;
   line-height: 1;
 }
 
 .cmp-ai-collapsed-text {
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 500;
   color: #aaa;
   white-space: nowrap;
@@ -129,7 +129,7 @@
   border: 1.5px solid #444;
   border-radius: 8px;
   padding: 8px 18px;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 600;
   color: #ccc;
   cursor: pointer;
@@ -147,7 +147,7 @@
   border: none;
   border-radius: 8px;
   padding: 8px 20px;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 700;
   color: #1a1a1a;
   cursor: pointer;
@@ -168,7 +168,7 @@
   border: 1.5px solid #444;
   background: transparent;
   color: #999;
-  font-size: 20px;
+  font-size: 23px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -202,7 +202,7 @@
 .cmp-event-tag {
   background: #2d4a2d;
   color: #7dcf7d;
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 700;
   padding: 3px 10px;
   border-radius: 4px;
@@ -210,7 +210,7 @@
 }
 
 .cmp-event-text {
-  font-size: 13px;
+  font-size: 14.9px;
   color: #999;
   font-weight: 500;
 }
@@ -222,7 +222,7 @@
 }
 
 .cmp-event-count {
-  font-size: 12px;
+  font-size: 13.8px;
   color: #777;
   font-weight: 500;
 }
@@ -232,7 +232,7 @@
   border: 1px dashed #555;
   border-radius: 6px;
   padding: 5px 14px;
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 600;
   color: #F5C518;
   cursor: pointer;
@@ -256,7 +256,7 @@
 }
 
 .cmp-view-toggle-label {
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 500;
   color: #888;
 }
@@ -272,7 +272,7 @@
   background: transparent;
   border: none;
   color: #888;
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 600;
   font-family: inherit;
   padding: 5px 14px;
@@ -345,7 +345,7 @@
 }
 
 .cmp-ai-emoji {
-  font-size: 18px;
+  font-size: 20.7px;
   line-height: 1;
 }
 
@@ -372,7 +372,7 @@
   border-radius: 12px;
   border-top-left-radius: 4px;
   padding: 10px 16px;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 500;
   color: #ddd;
   line-height: 1.45;
@@ -390,7 +390,7 @@
   border: 1.5px solid #3a3a3a;
   border-radius: 18px;
   padding: 5px 14px;
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 500;
   color: #ccc;
   cursor: pointer;
@@ -438,7 +438,7 @@
   height: 16px;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.2);
-  font-size: 12px;
+  font-size: 13.8px;
   line-height: 1;
   cursor: pointer;
   transition: background 0.15s ease;
@@ -461,7 +461,7 @@
   border: 1.5px solid #3a3a3a;
   border-radius: 18px;
   padding: 7px 14px;
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 500;
   color: #fff;
   font-family: inherit;
@@ -643,7 +643,7 @@
   position: absolute;
   top: 10px;
   left: 10px;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 700;
   padding: 5px 13px;
   border-radius: 6px;
@@ -667,7 +667,7 @@
 }
 
 .cmp-col-name {
-  font-size: 19.2px;
+  font-size: 22.1px;
   font-weight: 700;
   color: #fff;
   margin: 0;
@@ -675,7 +675,7 @@
 }
 
 .cmp-col-stars {
-  font-size: 14.4px;
+  font-size: 16.6px;
   letter-spacing: 1px;
   display: flex;
   align-items: center;
@@ -683,7 +683,7 @@
 }
 
 .cmp-col-rating-score {
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 700;
   color: #F5C518;
   margin-left: 6px;
@@ -691,7 +691,7 @@
 }
 
 .cmp-col-rating-reviews {
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 400;
   color: #999;
   letter-spacing: 0;
@@ -706,7 +706,7 @@
 }
 
 .cmp-col-meta {
-  font-size: 11px;
+  font-size: 12.6px;
   color: #bbb;
   line-height: 1.3;
 }
@@ -715,7 +715,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 11px;
+  font-size: 12.6px;
   color: #999;
   flex-wrap: wrap;
 }
@@ -779,7 +779,7 @@
 }
 
 .cmp-card-type {
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 600;
   color: #fff;
   flex: 1;
@@ -796,7 +796,7 @@
   height: 26px;
   background: #2d8a4e;
   color: #fff;
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 700;
   padding: 0 10px;
   border-radius: 6px;
@@ -806,7 +806,7 @@
 .cmp-card-editing-badge {
   background: #2d8a4e;
   color: #fff;
-  font-size: 9px;
+  font-size: 10.3px;
   font-weight: 700;
   padding: 2px 8px;
   border-radius: 4px;
@@ -874,7 +874,7 @@
 }
 
 .cmp-label {
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 700;
   color: #666;
   text-transform: uppercase;
@@ -883,7 +883,7 @@
 }
 
 .cmp-value {
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 500;
   color: #ccc;
   margin-right: 10px;
@@ -891,7 +891,7 @@
 
 /* Cancel badges */
 .cmp-cancel-tag {
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 600;
   padding: 2px 10px;
   border-radius: 4px;
@@ -951,7 +951,7 @@
 }
 
 .cmp-edit-label {
-  font-size: 9px;
+  font-size: 10.3px;
   font-weight: 700;
   color: #666;
   text-transform: uppercase;
@@ -964,7 +964,7 @@
   border: 1px solid #3a3a3a;
   border-radius: 6px;
   padding: 6px 8px;
-  font-size: 12px;
+  font-size: 13.8px;
   color: #eee;
   font-family: inherit;
   outline: none;
@@ -1026,7 +1026,7 @@
   border: none;
   background: #252525;
   color: #ccc;
-  font-size: 16px;
+  font-size: 18.4px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1043,7 +1043,7 @@
 .cmp-qty-val {
   width: 36px;
   text-align: center;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 700;
   color: #fff;
   background: #1a1a1a;
@@ -1064,25 +1064,25 @@
 }
 
 .cmp-price-calc {
-  font-size: 11px;
+  font-size: 12.6px;
   color: #777;
   font-weight: 500;
 }
 
 .cmp-price-total {
-  font-size: 19px;
+  font-size: 21.8px;
   font-weight: 700;
   color: #F5C518;
 }
 
 .cmp-price-label {
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 600;
   color: #999;
 }
 
 .cmp-col-subtotal-label {
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 600;
   color: #999;
 }
@@ -1095,7 +1095,7 @@
   border-radius: 10px;
   background: transparent;
   color: #777;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
@@ -1126,13 +1126,13 @@
 }
 
 .cmp-col-subtotal-name {
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 700;
   color: #fff;
 }
 
 .cmp-col-subtotal-meta {
-  font-size: 11px;
+  font-size: 12.6px;
   color: #777;
 }
 
@@ -1149,13 +1149,13 @@
   border: 1px solid #3a3a3a;
   border-radius: 4px;
   padding: 2px 8px;
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 500;
   color: #bbb;
 }
 
 .cmp-col-subtotal-amount {
-  font-size: 22px;
+  font-size: 25.3px;
   font-weight: 700;
   color: #F5C518;
 }
@@ -1168,7 +1168,7 @@
   border: 1.5px solid #F5C518;
   border-radius: 10px;
   color: #F5C518;
-  font-size: 14px;
+  font-size: 16.1px;
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
@@ -1189,7 +1189,7 @@
 }
 
 .cmp-summary-card-title {
-  font-size: 15px;
+  font-size: 17.3px;
   font-weight: 700;
   color: #fff;
   margin: 0 0 10px;
@@ -1212,7 +1212,7 @@
 }
 
 .cmp-summary-card-header {
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 700;
   color: #fff;
   margin-bottom: 12px;
@@ -1225,7 +1225,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 6px 0;
-  font-size: 12px;
+  font-size: 13.8px;
   color: #999;
 }
 
@@ -1248,7 +1248,7 @@
 
 .cmp-summary-line-total span:last-child {
   color: #F5C518;
-  font-size: 16px;
+  font-size: 18.4px;
   font-weight: 700;
 }
 
@@ -1271,7 +1271,7 @@
 }
 
 .cmp-urgency-icon {
-  font-size: 22px;
+  font-size: 25.3px;
   line-height: 1;
   flex-shrink: 0;
   margin-top: 2px;
@@ -1286,13 +1286,13 @@
 }
 
 .cmp-urgency-title {
-  font-size: 14px;
+  font-size: 16.1px;
   font-weight: 700;
   color: #ff6b6b;
 }
 
 .cmp-urgency-text {
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 500;
   color: #999;
   line-height: 1.45;
@@ -1311,7 +1311,7 @@
   border: 1px solid rgba(255, 68, 68, 0.2);
   border-radius: 6px;
   padding: 3px 10px;
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 600;
   color: #ff6b6b;
   white-space: nowrap;
@@ -1330,7 +1330,7 @@
 }
 
 .cmp-footer-quote-label {
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 700;
   color: #fff;
   white-space: nowrap;
@@ -1351,7 +1351,7 @@
 }
 
 .cmp-footer-stat-label {
-  font-size: 9px;
+  font-size: 10.3px;
   font-weight: 700;
   color: #666;
   text-transform: uppercase;
@@ -1359,7 +1359,7 @@
 }
 
 .cmp-footer-stat-value {
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 600;
   color: #ccc;
 }
@@ -1370,20 +1370,20 @@
 }
 
 .cmp-footer-grand-amount {
-  font-size: 28px;
+  font-size: 32.2px;
   font-weight: 800;
   color: #F5C518;
   line-height: 1.2;
 }
 
 .cmp-footer-grand-prefix {
-  font-size: 16px;
+  font-size: 18.4px;
   font-weight: 700;
   color: #ccc;
 }
 
 .cmp-footer-grand-amount small {
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 500;
   color: #999;
 }
@@ -1393,7 +1393,7 @@
   border: none;
   border-radius: 10px;
   padding: 12px 28px;
-  font-size: 14px;
+  font-size: 16.1px;
   font-weight: 700;
   color: #1a1a1a;
   cursor: pointer;
@@ -1464,7 +1464,7 @@
   }
 
   .cmp-footer-quote-label {
-    font-size: 16px;
+    font-size: 18.4px;
   }
 
   .cmp-col-hero {
@@ -1479,7 +1479,7 @@
   }
 
   .cmp-title {
-    font-size: 17px;
+    font-size: 19.5px;
   }
 
   .cmp-footer {
@@ -1488,7 +1488,7 @@
   }
 
   .cmp-footer-quote-label {
-    font-size: 15px;
+    font-size: 17.3px;
   }
 
   .cmp-footer-stats {
@@ -1535,14 +1535,14 @@
   }
 
   .cmp-card-type {
-    font-size: 12px;
+    font-size: 13.8px;
     flex: 1 1 auto;
     min-width: 80px;
   }
 
   .cmp-card-qty-badge {
     height: 24px;
-    font-size: 10px;
+    font-size: 11.5px;
     padding: 0 8px;
   }
 
@@ -1554,18 +1554,18 @@
 
   .cmp-edit-select,
   .cmp-edit-input {
-    font-size: 13px;
+    font-size: 14.9px;
     padding: 8px 10px;
     min-height: 38px;
   }
 
   .cmp-edit-label {
-    font-size: 9px;
+    font-size: 10.3px;
   }
 
   .cmp-add-config {
     padding: 12px;
-    font-size: 13px;
+    font-size: 14.9px;
   }
 }
 
@@ -1697,7 +1697,7 @@
 }
 
 .cmp-confirm-text {
-  font-size: 15px;
+  font-size: 17.3px;
   color: #ddd;
   line-height: 1.5;
   margin: 0 0 20px;
@@ -1720,7 +1720,7 @@
   border: 1.5px solid #444;
   border-radius: 8px;
   padding: 9px 28px;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 600;
   color: #ccc;
   cursor: pointer;
@@ -1738,7 +1738,7 @@
   border: none;
   border-radius: 8px;
   padding: 9px 28px;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 700;
   color: #1a1a1a;
   cursor: pointer;
@@ -1767,14 +1767,14 @@
 }
 
 .cmp-booking-title {
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 700;
   color: #fff;
   margin: 0 0 4px;
 }
 
 .cmp-booking-sub {
-  font-size: 13px;
+  font-size: 14.9px;
   color: #999;
   margin: 0 0 20px;
 }
@@ -1807,7 +1807,7 @@
 }
 
 .cmp-booking-label {
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 600;
   color: #888;
   text-transform: uppercase;
@@ -1819,7 +1819,7 @@
   border: 1px solid #3a3a3a;
   border-radius: 8px;
   padding: 10px 12px;
-  font-size: 14px;
+  font-size: 16.1px;
   color: #fff;
   font-family: inherit;
   outline: none;
@@ -1854,7 +1854,7 @@
   border: 1.5px solid #F5C518;
   border-radius: 10px;
   padding: 12px 20px;
-  font-size: 14px;
+  font-size: 16.1px;
   font-weight: 600;
   color: #F5C518;
   cursor: pointer;
@@ -1911,7 +1911,7 @@
 }
 
 .cmp-share-title {
-  font-size: 16px;
+  font-size: 18.4px;
   font-weight: 700;
   color: #fff;
   margin: 0;
@@ -1924,7 +1924,7 @@
   border: none;
   background: rgba(255, 255, 255, 0.08);
   color: #999;
-  font-size: 16px;
+  font-size: 18.4px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1943,7 +1943,7 @@
 
 .cmp-share-label {
   display: block;
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 600;
   color: #888;
   text-transform: uppercase;
@@ -1963,7 +1963,7 @@
   border-radius: 8px;
   padding: 10px 12px;
   color: #ccc;
-  font-size: 12px;
+  font-size: 13.8px;
   font-family: 'Inter', monospace;
   outline: none;
 }
@@ -1978,7 +1978,7 @@
   border: none;
   border-radius: 8px;
   padding: 10px 18px;
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
@@ -1997,7 +1997,7 @@
   border-radius: 8px;
   padding: 10px 12px;
   color: #fff;
-  font-size: 13px;
+  font-size: 14.9px;
   font-family: 'Inter', sans-serif;
   outline: none;
   box-sizing: border-box;
@@ -2025,7 +2025,7 @@
   border-radius: 8px;
   padding: 9px 20px;
   color: #aaa;
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -2042,7 +2042,7 @@
   border: none;
   border-radius: 8px;
   padding: 9px 24px;
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -2101,7 +2101,7 @@
   border: 1.5px solid #555;
   background: rgba(30, 30, 30, 0.8);
   color: #fff;
-  font-size: 22px;
+  font-size: 25.3px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -2132,7 +2132,7 @@
 }
 
 .cmp-lightbox-caption {
-  font-size: 14px;
+  font-size: 16.1px;
   font-weight: 500;
   color: #aaa;
 }
@@ -2197,14 +2197,14 @@
 }
 
 .qs-header-title {
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 700;
   color: #fff;
   margin: 0;
 }
 
 .qs-header-event {
-  font-size: 12px;
+  font-size: 13.8px;
   color: #888;
   font-weight: 500;
 }
@@ -2216,7 +2216,7 @@
 }
 
 .qs-header-dates {
-  font-size: 13px;
+  font-size: 14.9px;
   color: #999;
   font-weight: 500;
   background: #2a2a2a;
@@ -2232,7 +2232,7 @@
   border: 1.5px solid #444;
   background: transparent;
   color: #999;
-  font-size: 20px;
+  font-size: 23px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -2271,7 +2271,7 @@
 }
 
 .qs-stat-num {
-  font-size: 22px;
+  font-size: 25.3px;
   font-weight: 800;
   color: #F5C518;
   line-height: 1.2;
@@ -2279,7 +2279,7 @@
 
 
 .qs-stat-label {
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 600;
   color: #777;
   text-transform: uppercase;
@@ -2325,19 +2325,19 @@
 }
 
 .qs-hotel-name {
-  font-size: 16px;
+  font-size: 18.4px;
   font-weight: 700;
   color: #fff;
   margin: 0;
 }
 
 .qs-hotel-stars {
-  font-size: 14.4px;
+  font-size: 16.6px;
   letter-spacing: 1px;
 }
 
 .qs-hotel-meta {
-  font-size: 11px;
+  font-size: 12.6px;
   color: #777;
 }
 
@@ -2345,12 +2345,12 @@
 .qs-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 12px;
+  font-size: 13.8px;
 }
 
 .qs-table thead th {
   text-align: left;
-  font-size: 9px;
+  font-size: 10.3px;
   font-weight: 700;
   color: #666;
   text-transform: uppercase;
@@ -2383,7 +2383,7 @@
 
 .qs-td-dates {
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 12.6px;
 }
 
 .qs-td-center {
@@ -2401,7 +2401,7 @@
 
 /* Cancel badges (within table) */
 .qs-cancel-badge {
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 4px;
@@ -2434,20 +2434,20 @@
 }
 
 .qs-tfoot-label {
-  font-size: 11px;
+  font-size: 12.6px;
   color: #777;
   font-weight: 500;
 }
 
 .qs-tfoot-subtotal-label {
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 700;
   color: #bbb;
   text-align: right;
 }
 
 .qs-tfoot-amount {
-  font-size: 15px;
+  font-size: 17.3px;
   font-weight: 800;
   color: #F5C518 !important;
 }
@@ -2470,7 +2470,7 @@
 }
 
 .qs-grand-label {
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 700;
   color: #888;
   text-transform: uppercase;
@@ -2478,20 +2478,20 @@
 }
 
 .qs-grand-sub {
-  font-size: 12px;
+  font-size: 13.8px;
   color: #666;
   font-weight: 500;
 }
 
 .qs-grand-amount {
-  font-size: 28px;
+  font-size: 32.2px;
   font-weight: 800;
   color: #F5C518;
   line-height: 1.1;
 }
 
 .qs-grand-amount small {
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 500;
   color: #999;
 }
@@ -2516,7 +2516,7 @@
   border: 1.5px solid #444;
   border-radius: 8px;
   padding: 9px 18px;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 600;
   color: #ccc;
   cursor: pointer;
@@ -2534,7 +2534,7 @@
   border: none;
   border-radius: 8px;
   padding: 10px 24px;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 700;
   color: #1a1a1a;
   cursor: pointer;
@@ -2578,7 +2578,7 @@
   }
 
   .qs-stat-num {
-    font-size: 18px;
+    font-size: 20.7px;
   }
 
   .qs-body {
@@ -2586,7 +2586,7 @@
   }
 
   .qs-table {
-    font-size: 11px;
+    font-size: 12.6px;
     display: block;
     overflow-x: auto;
   }
@@ -2596,7 +2596,7 @@
   }
 
   .qs-grand-amount {
-    font-size: 22px;
+    font-size: 25.3px;
   }
 
   .qs-actions {
@@ -2638,7 +2638,7 @@
   }
 
   .qs-hotel-name {
-    font-size: 14px;
+    font-size: 16.1px;
   }
 
   .qs-grand {
@@ -2721,7 +2721,7 @@
 }
 
 .smp-img-overlay-name {
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 700;
   color: #fff;
   line-height: 1.2;
@@ -2735,16 +2735,16 @@
   display: flex;
   align-items: center;
   gap: 1px;
-  font-size: 13px;
+  font-size: 14.9px;
 }
 
 .smp-img-overlay-stars .star-filled {
   color: #F5C518;
-  font-size: 12px;
+  font-size: 13.8px;
 }
 
 .smp-img-overlay-dist {
-  font-size: 10px;
+  font-size: 11.5px;
   color: rgba(255,255,255,0.65);
   line-height: 1.3;
   white-space: nowrap;
@@ -2779,7 +2779,7 @@
 /* ─── Header cells ─── */
 .smp-header {
   background: #1a1a1a !important;
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -2796,7 +2796,7 @@
 }
 
 .smp-id-num {
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 700;
   color: #666;
 }
@@ -2809,7 +2809,7 @@
 }
 
 .smp-cell-total-label {
-  font-size: 15px;
+  font-size: 17.3px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -2830,13 +2830,13 @@
 }
 
 .smp-total-label {
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 600;
   color: rgba(255,255,255,0.5);
   margin-right: 4px;
 }
 .smp-cell-price.smp-total-price {
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 800;
 }
 
@@ -2916,7 +2916,7 @@
   border: 1px solid #333;
   border-radius: 5px;
   color: #ddd;
-  font-size: 13px;
+  font-size: 14.9px;
   padding: 6.5px 6px;
   font-family: inherit;
   width: 100%;
@@ -2960,7 +2960,7 @@
 }
 
 .smp-cell-price {
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 700;
   color: #F5C518;
   white-space: nowrap;
@@ -2974,7 +2974,7 @@
   border: 1px solid #333;
   border-radius: 5px;
   color: #ddd;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 500;
   padding: 6.5px 8px;
   cursor: pointer;
@@ -3006,6 +3006,15 @@
   color: #666;
 }
 
+/* Board flash — yellow blink after "Add breakfast" */
+.smp-board-flash {
+  animation: boardBlink 0.7s ease-out;
+}
+@keyframes boardBlink {
+  0%   { color: #F5C518; text-shadow: 0 0 6px rgba(245, 197, 24, 0.6); }
+  100% { color: inherit; text-shadow: none; }
+}
+
 /* ─── Config popup ─── */
 .smp-popup.smp-config-popup {
   width: 345px;
@@ -3018,7 +3027,7 @@
 
 .smp-config-section-label {
   display: block;
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -3040,7 +3049,7 @@
   border: 1px solid #444;
   border-radius: 8px;
   color: #bbb;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 600;
   padding: 8px 22px;
   cursor: pointer;
@@ -3058,7 +3067,7 @@
   border: none;
   border-radius: 8px;
   color: #000;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 700;
   padding: 8px 28px;
   cursor: pointer;
@@ -3084,7 +3093,7 @@
   cursor: pointer;
   font-family: inherit;
   color: #ddd;
-  font-size: 13px;
+  font-size: 14.9px;
   transition: border-color 0.15s ease;
 }
 
@@ -3106,12 +3115,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 13px;
+  font-size: 14.9px;
   line-height: 1.2;
 }
 
 .smp-room-trigger-price {
-  font-size: 15px;
+  font-size: 17.3px;
   font-weight: 700;
   color: #F5C518;
   flex-shrink: 0;
@@ -3178,19 +3187,19 @@
 }
 
 .smp-room-popup-name {
-  font-size: 14px;
+  font-size: 16.1px;
   font-weight: 600;
   color: #fff;
 }
 
 .smp-room-popup-price {
-  font-size: 16px;
+  font-size: 18.4px;
   font-weight: 700;
   color: #F5C518;
 }
 
 .smp-room-popup-price small {
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 400;
   color: #888;
 }
@@ -3247,7 +3256,7 @@
   border: none;
   border-radius: 8px;
   color: #1a1a1a;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
@@ -3282,18 +3291,18 @@
 }
 
 .smp-subtotal-name {
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 600;
   color: #fff;
 }
 
 .smp-subtotal-rooms {
-  font-size: 11px;
+  font-size: 12.6px;
   color: #777;
 }
 
 .smp-subtotal-amount {
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 700;
   color: #F5C518;
   margin-top: 4px;
@@ -3351,7 +3360,7 @@
 }
 
 .smp-popup-title {
-  font-size: 16px;
+  font-size: 18.4px;
   font-weight: 700;
   color: #fff;
   margin: 0;
@@ -3364,7 +3373,7 @@
   border: 1px solid #333;
   background: transparent;
   color: #888;
-  font-size: 18px;
+  font-size: 20.7px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -3390,7 +3399,7 @@
 }
 
 .smp-cal-tag {
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 500;
   color: #777;
   padding: 4px 10px;
@@ -3408,7 +3417,7 @@
 
 .smp-cal-arrow {
   color: #555;
-  font-size: 14px;
+  font-size: 16.1px;
 }
 
 .smp-cal-nav {
@@ -3428,7 +3437,7 @@
   border: 1px solid #333;
   background: transparent;
   color: #ccc;
-  font-size: 18px;
+  font-size: 20.7px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -3443,7 +3452,7 @@
 }
 
 .smp-cal-month {
-  font-size: 14px;
+  font-size: 16.1px;
   font-weight: 600;
   color: #fff;
 }
@@ -3457,7 +3466,7 @@
 
 .smp-cal-dow {
   text-align: center;
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 600;
   color: #666;
   text-transform: uppercase;
@@ -3478,7 +3487,7 @@
   border: 1px solid transparent;
   background: transparent;
   color: #ccc;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 500;
   cursor: pointer;
   font-family: inherit;
@@ -3543,7 +3552,7 @@
 }
 
 .smp-pax-row-label {
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 500;
   color: #ccc;
   width: 110px;
@@ -3562,7 +3571,7 @@
   border: none;
   border-radius: 8px;
   color: #1a1a1a;
-  font-size: 14px;
+  font-size: 16.1px;
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
@@ -3614,7 +3623,7 @@
 
   .smp-table {
     grid-template-columns: 26px 344px repeat(var(--hotel-count), minmax(42px, calc((100vw - 26px - 344px - 40px - 24px) / 4)) ) 40px;
-    font-size: 10px;
+    font-size: 11.5px;
   }
 
   .smp-cell {
@@ -3628,15 +3637,15 @@
   }
 
   .smp-img-overlay-name {
-    font-size: 9px;
+    font-size: 10.3px;
   }
 
   .smp-img-overlay-dist {
-    font-size: 7px;
+    font-size: 8px;
   }
 
   .smp-config-btn {
-    font-size: 10px;
+    font-size: 11.5px;
     padding: 4px 6px;
   }
 
@@ -3645,12 +3654,12 @@
   }
 
   .smp-select {
-    font-size: 10px;
+    font-size: 11.5px;
     padding: 4px 5px;
   }
 
   .smp-cell-price {
-    font-size: 13px;
+    font-size: 14.9px;
   }
 
   .smp-add-row {
@@ -3671,7 +3680,7 @@
   }
 
   .smp-subtotal-amount {
-    font-size: 18px;
+    font-size: 20.7px;
     margin-top: 0;
   }
 
@@ -3689,7 +3698,7 @@
   }
 
   .smp-remove-btn {
-    font-size: 11px;
+    font-size: 12.6px;
     padding: 4px 10px;
   }
 }

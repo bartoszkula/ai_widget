@@ -40,7 +40,7 @@
 .hotel-search-input {
   border: none;
   outline: none;
-  font-size: 13px;
+  font-size: 14.9px;
   font-family: inherit;
   color: #333;
   width: 110px;
@@ -72,7 +72,7 @@
   border: none;
   border-radius: 18px;
   background: transparent;
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 500;
   color: #777;
   cursor: pointer;
@@ -128,7 +128,7 @@
 
 .dates-text,
 .guests-text {
-  font-size: 13px;
+  font-size: 14.9px;
   color: #555;
   font-weight: 400;
 }
@@ -157,7 +157,7 @@
   border: none;
   border-radius: 24px;
   padding: 10px 20px;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s ease, transform 0.1s ease;
@@ -204,7 +204,7 @@
   border: none;
   border-radius: 12px;
   font-family: 'Inter', sans-serif;
-  font-size: 13px;
+  font-size: 14.9px;
 }
 
 .datepicker-popup .react-datepicker__header {
@@ -215,7 +215,7 @@
 
 .datepicker-popup .react-datepicker__current-month {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16.1px;
   color: #1a1a1a;
   margin-bottom: 8px;
 }
@@ -223,7 +223,7 @@
 .datepicker-popup .react-datepicker__day-name {
   color: #999;
   font-weight: 500;
-  font-size: 11px;
+  font-size: 12.6px;
   width: 36px;
   line-height: 36px;
 }
@@ -232,7 +232,7 @@
   width: 36px;
   line-height: 36px;
   border-radius: 50%;
-  font-size: 13px;
+  font-size: 14.9px;
   color: #333;
   transition: all 0.1s ease;
 }
@@ -316,7 +316,7 @@
 }
 
 .pax-room-title {
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 600;
   color: #1a1a1a;
 }
@@ -344,7 +344,7 @@
 }
 
 .pax-label {
-  font-size: 12px;
+  font-size: 13.8px;
   color: #555;
   font-weight: 400;
 }
@@ -361,7 +361,7 @@
   border-radius: 50%;
   border: 1px solid #ddd;
   background: white;
-  font-size: 14px;
+  font-size: 16.1px;
   font-weight: 500;
   color: #333;
   cursor: pointer;
@@ -385,7 +385,7 @@
 }
 
 .pax-value {
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 600;
   color: #1a1a1a;
   min-width: 16px;
@@ -409,7 +409,7 @@
 }
 
 .pax-child-age-label {
-  font-size: 11px;
+  font-size: 12.6px;
   color: #888;
   font-weight: 400;
 }
@@ -418,7 +418,7 @@
   padding: 3px 8px;
   border: 1px solid #ddd;
   border-radius: 6px;
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 500;
   color: #333;
   background: #fff;
@@ -440,7 +440,7 @@
   border: 1px dashed #ddd;
   border-radius: 8px;
   background: transparent;
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 500;
   color: #777;
   cursor: pointer;
@@ -466,7 +466,7 @@
 }
 
 .pax-group-text {
-  font-size: 11px;
+  font-size: 12.6px;
   color: #777;
   font-weight: 400;
   text-align: center;
@@ -479,7 +479,7 @@
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
@@ -503,12 +503,12 @@
 
   .hotel-search-input {
     width: 80px;
-    font-size: 12px;
+    font-size: 13.8px;
   }
 
   .view-toggle-btn {
     padding: 4px 8px;
-    font-size: 11px;
+    font-size: 12.6px;
     gap: 3px;
   }
 
@@ -525,12 +525,12 @@
 
   .dates-text,
   .guests-text {
-    font-size: 12px;
+    font-size: 13.8px;
   }
 
   .search-button {
     padding: 8px 14px;
-    font-size: 12px;
+    font-size: 13.8px;
   }
 
   .search-guests {
@@ -538,7 +538,7 @@
   }
 
   .datepicker-popup .react-datepicker {
-    font-size: 12px;
+    font-size: 13.8px;
   }
 
   .datepicker-popup .react-datepicker__day,
@@ -571,7 +571,7 @@
 
   .hotel-search-input {
     width: 70px;
-    font-size: 11px;
+    font-size: 12.6px;
   }
 
   .view-toggle {
@@ -580,7 +580,7 @@
 
   .view-toggle-btn {
     padding: 3px 6px;
-    font-size: 10px;
+    font-size: 11.5px;
     gap: 2px;
   }
 
@@ -601,7 +601,7 @@
 
   .search-button {
     padding: 6px 10px;
-    font-size: 11px;
+    font-size: 12.6px;
     border-radius: 12px;
   }
 
@@ -616,7 +616,7 @@
   }
 
   .datepicker-popup .react-datepicker {
-    font-size: 11px;
+    font-size: 12.6px;
   }
 
   .datepicker-popup .react-datepicker__month-container + .react-datepicker__month-container {

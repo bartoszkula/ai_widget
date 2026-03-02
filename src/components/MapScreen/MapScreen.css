@@ -51,7 +51,7 @@
   background: #F5C518;
   color: #1a1a1a;
   font-weight: 700;
-  font-size: 12px;
+  font-size: 13.8px;
   padding: 4px 10px;
   border-radius: 8px;
   white-space: nowrap;
@@ -160,7 +160,7 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-size: 14px !important;
+  font-size: 16.1px !important;
   line-height: 1 !important;
   top: 6px !important;
   right: 6px !important;
@@ -211,7 +211,7 @@
   background: #F5C518;
   color: #1a1a1a;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16.1px;
   padding: 4px 10px;
   border-radius: 6px;
   letter-spacing: -0.2px;
@@ -223,7 +223,7 @@
   background: #F5C518;
   color: #1a1a1a;
   font-weight: 600;
-  font-size: 9px;
+  font-size: 10.3px;
   padding: 2px 7px;
   border-radius: 3px;
   text-transform: uppercase;
@@ -244,7 +244,7 @@
 }
 
 .popup-card-name {
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 700;
   color: #ffffff;
   margin-bottom: 3px;
@@ -269,7 +269,7 @@
 }
 
 .popup-card-rating {
-  font-size: 10px;
+  font-size: 11.5px;
   color: rgba(255, 255, 255, 0.7);
   margin-left: auto;
 }
@@ -293,13 +293,13 @@
   display: flex;
   align-items: center;
   gap: 3px;
-  font-size: 10px;
+  font-size: 11.5px;
   color: #bbb;
 }
 
 .popup-card-dot {
   color: #555;
-  font-size: 10px;
+  font-size: 11.5px;
 }
 
 /* Venue popup — keep column layout */
@@ -315,7 +315,7 @@
 
 /* Venue popup extras */
 .popup-card-event-name {
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 700;
   color: #F5C518;
   background: #2a2a2a;
@@ -326,7 +326,7 @@
 }
 
 .popup-card-event-info {
-  font-size: 11px;
+  font-size: 12.6px;
   color: #999;
   line-height: 1.4;
 }
@@ -457,7 +457,7 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  font-size: 9px;
+  font-size: 10.3px;
   font-weight: 700;
   color: #ff6b6b;
   background: rgba(255, 107, 107, 0.12);
@@ -512,7 +512,7 @@
   }
 
   .marker-pin {
-    font-size: 11px;
+    font-size: 12.6px;
     padding: 3px 8px;
   }
 }
@@ -575,7 +575,7 @@
   }
 
   .marker-pin {
-    font-size: 10px;
+    font-size: 11.5px;
     padding: 3px 6px;
     border-radius: 6px;
   }
@@ -645,7 +645,7 @@
 }
 
 .group-loading-text {
-  font-size: 15px;
+  font-size: 17.3px;
   font-weight: 600;
   color: #fff;
   font-family: 'Inter', sans-serif;

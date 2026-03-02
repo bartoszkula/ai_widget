@@ -128,6 +128,7 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
   const [calendarPhase, setCalendarPhase] = useState('checkin') // 'checkin' or 'checkout'
   const [calendarMonth, setCalendarMonth] = useState(() => new Date(2027, 8)) // Sep 2027
   const [roomPopup, setRoomPopup] = useState(null) // { rowId, hotelId } for room selection popup
+  const [boardFlash, setBoardFlash] = useState(0) // tick counter to trigger board blink
   const bodyRef = useRef(null)
   const smpTableRef = useRef(null)
   const tierMapRef = useRef({})
@@ -485,7 +486,7 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
     const pax = formatPax(row)
     const board = row.board
     const cancel = CANCEL_OPTIONS.find((o) => o.value === row.cancellation)?.label || row.cancellation
-    return `${dates}  ·  ${pax}  ·  ${board}  ·  ${cancel}`
+    return <>{dates}  ·  {pax}  ·  <span key={boardFlash} className={boardFlash ? 'smp-board-flash' : ''}>{board}</span>  ·  {cancel}</>
   }
 
   // Open config popup with draft copy
@@ -811,6 +812,8 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
       }
       return next
     })
+    // Flash the board text in every config row
+    setBoardFlash((t) => t + 1)
     setAiMessage('Done! All rooms have been updated to Bed & Breakfast. 🍳')
     setTimeout(() => setAiMessage(null), 3000)
   }, [])
@@ -1669,7 +1672,7 @@ const CompareHotels = ({ hotels, onBack, onRemoveHotel, onReplaceHotel, onReplac
         <div className="cmp-footer-stats">
           <div className="cmp-footer-stat"><span className="cmp-footer-stat-label">DATE RANGE</span><span className="cmp-footer-stat-value">{dateRange.label}</span></div>
           <div className="cmp-footer-stat"><span className="cmp-footer-stat-label">HOTELS</span><span className="cmp-footer-stat-value">{grand.hotels}</span></div>
-          <div className="cmp-footer-stat"><span className="cmp-footer-stat-label">ROOMS</span><span className="cmp-footer-stat-value">{grand.rooms}</span></div>
+          <div className="cmp-footer-stat"><span className="cmp-footer-stat-label">ROOMS</span><span className="cmp-footer-stat-value">{viewMode === 'simple' ? simpleConfigs.length : grand.rooms}</span></div>
           <div className="cmp-footer-stat"><span className="cmp-footer-stat-label">GUESTS</span><span className="cmp-footer-stat-value">{grand.adults} {grand.adults === 1 ? 'Adult' : 'Adults'}{grand.children > 0 ? ` + ${grand.children} ${grand.children === 1 ? 'Child' : 'Children'}` : ''}</span></div>
           <div className="cmp-footer-stat"><span className="cmp-footer-stat-label">ROOM-NIGHTS</span><span className="cmp-footer-stat-value">{grand.roomNights}</span></div>
         </div>

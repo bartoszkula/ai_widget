@@ -18,7 +18,7 @@
 }
 
 .compare-tray-title {
-  font-size: 12px;
+  font-size: 13.8px;
   font-weight: 700;
   color: #F5C518;
   text-transform: uppercase;
@@ -57,7 +57,7 @@
 }
 
 .compare-tray-name {
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 600;
   color: #fff;
   white-space: nowrap;
@@ -66,7 +66,7 @@
 }
 
 .compare-tray-price {
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 700;
   color: #F5C518;
 }
@@ -100,7 +100,7 @@
   border: none;
   border-radius: 8px;
   padding: 8px;
-  font-size: 13px;
+  font-size: 14.9px;
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
@@ -132,7 +132,7 @@
 }
 
 .compare-tray-hint-text {
-  font-size: 11px;
+  font-size: 12.6px;
   font-weight: 500;
   color: #666;
   line-height: 1.4;
@@ -162,6 +162,6 @@
   }
 
   .compare-tray-name {
-    font-size: 10px;
+    font-size: 11.5px;
   }
 }
